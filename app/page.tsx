@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { Button } from '@/components/ui/button';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -10,7 +10,7 @@ export default function Home() {
     <main className="w-screen h-screen flex justify-center items-center">
       <div>
         {session ? (
-          <Button onClick={() => signIn("github")} variant="default" size="lg">
+          <Button onClick={() => signIn('github')} variant="default" size="lg">
             Logout
           </Button>
         ) : (
