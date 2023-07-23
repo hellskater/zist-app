@@ -10,11 +10,11 @@ export default function Home() {
     <main className="w-screen h-screen flex justify-center items-center">
       <div>
         {session ? (
-          <Button onClick={() => signIn('github')} variant="default" size="lg">
+          <Button onClick={() => signOut()} variant="default" size="lg">
             Logout
           </Button>
         ) : (
-          <Button onClick={() => signOut()} variant="default" size="lg">
+          <Button onClick={() => signIn('github')} variant="default" size="lg">
             Login
           </Button>
         )}
