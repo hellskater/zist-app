@@ -13,4 +13,4 @@ Optimize your coding workflow with Zist, the revolutionary code snippets manager
 
 ## Todo
 
-- [ ] Configure `.eslintrc.json` to use `@typescript-eslint` rules
+- [x] Configure `.eslintrc.json` to use `@typescript-eslint` rules

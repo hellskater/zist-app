@@ -1,7 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { useSession, signIn, signOut } from 'next-auth/react';
+
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { data: session } = useSession();
