@@ -18,10 +18,18 @@ const CodePreview = ({ value, language }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, value]);
 
+  const getValue = () => {
+    if (typeof value === 'string') {
+      return value;
+    } else {
+      return JSON.stringify(value, null, 2);
+    }
+  };
+
   return (
     <pre className="h-40 w-full">
       <code ref={codeEl} className={`h-full ${language}`}>
-        {value}
+        {getValue()}
       </code>
     </pre>
   );

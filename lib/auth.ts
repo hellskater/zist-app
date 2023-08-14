@@ -1,6 +1,8 @@
 import { NextAuthOptions, type Profile, type Session } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 
+import { defaultZistConfig } from './constants/configs';
+
 export type CustomSession = {
   accessToken: string;
   user: {
@@ -25,6 +27,11 @@ export const authOptions: NextAuthOptions = {
 
   // push the access token to the session
   callbacks: {
+    async signIn({ account }) {
+      await markZist(account?.access_token as string);
+
+      return true;
+    },
     async jwt({ token, account, profile }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
       if (account) {
@@ -45,4 +52,28 @@ export const authOptions: NextAuthOptions = {
       return session as CustomSession;
     },
   },
+};
+
+const markZist = async (accessToken: string) => {
+  const allGists = await fetch('https://api.github.com/gists', {
+    headers: {
+      Authorization: `token ${accessToken}`,
+    },
+  }).then((res) => res.json());
+
+  const zistExists = allGists.find(
+    (gist: { description: string }) => gist.description === 'zist.config.json'
+  );
+
+  if (zistExists) {
+    return;
+  }
+
+  await fetch('https://api.github.com/gists', {
+    method: 'POST',
+    headers: {
+      Authorization: `token ${accessToken}`,
+    },
+    body: JSON.stringify(defaultZistConfig),
+  });
 };
