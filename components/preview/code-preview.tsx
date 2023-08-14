@@ -19,8 +19,8 @@ const CodePreview = ({ value, language }: Props) => {
   }, [language, value]);
 
   return (
-    <pre>
-      <code ref={codeEl} className={language}>
+    <pre className="h-40 w-full">
+      <code ref={codeEl} className={`h-full ${language}`}>
         {value}
       </code>
     </pre>

@@ -1,4 +1,6 @@
 import { useGetGist } from '@/lib/hooks/useGists';
+import { Skeleton } from '@/components/ui/skeleton';
+import { extensionToLanguage } from '@/lib/constants/language';
 
 import CodePreview from './code-preview';
 
@@ -16,17 +18,34 @@ type PreviewCardProps = {
 
 const PreviewCard = ({ data }: PreviewCardProps) => {
   const { data: gistContent } = useGetGist(data?.raw_url);
-  console.log(gistContent);
+
+  const language = data?.language.toLowerCase();
+
+  const extension = data?.filename.split('.').pop();
+
+  const languageIcon = extensionToLanguage[extension as string];
+
+  console.log(languageIcon);
+
   return (
-    <div>
+    <div className="w-full lg:w-[calc(50%-2.5rem)] h-80 border-2 rounded-2xl overflow-hidden">
       <section>
         {gistContent ? (
-          <CodePreview value={gistContent} language={data.language} />
+          <CodePreview value={gistContent} language={language} />
         ) : (
-          <div>Loading...</div>
+          <Skeleton className="w-full h-40" />
         )}
       </section>
-      <p>{data.filename}</p>
+      <section className="p-5">
+        <div className="flex items-center gap-10">
+          <p className="text-xl">{data?.filename}</p>
+          {languageIcon && (
+            <i
+              className={`devicon-${languageIcon}-original text-white text-3xl`}
+            />
+          )}
+        </div>
+      </section>
     </div>
   );
 };

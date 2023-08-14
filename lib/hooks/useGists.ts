@@ -20,8 +20,12 @@ const getAllGists = async (accessToken: string) => {
 export const useGetAllGists = () => {
   const { data: session } = useSession();
 
-  return useQuery(['gists', (session?.user as CustomProfile)?.id], () =>
-    getAllGists((session as CustomSession)?.accessToken)
+  return useQuery(
+    ['gists', (session?.user as CustomProfile)?.id],
+    () => getAllGists((session as CustomSession)?.accessToken),
+    {
+      enabled: !!session,
+    }
   );
 };
 
