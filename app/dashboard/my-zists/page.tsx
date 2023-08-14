@@ -5,7 +5,7 @@ import Search from '@/components/search';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetAllGists } from '@/lib/hooks/useGists';
 
-const DashboardPage = () => {
+const MyZistsPage = () => {
   const { data: gists, isLoading } = useGetAllGists();
 
   const getGists = () => {
@@ -28,12 +28,12 @@ const DashboardPage = () => {
   console.log(gists);
   return (
     <div className="min-h-screen">
-      <Search
-        value=""
-        onChange={(value) => console.log(value)}
-        placeholder="Search..."
-      />
-      <section className="flex items-center gap-10 mt-20 flex-wrap">
+      <h1 className="text-4xl font-bold mt-10">My Zists</h1>
+      <section className="mt-10">
+        <Search />
+      </section>
+
+      <section className="flex items-center gap-10 mt-10 flex-wrap">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Skeleton
@@ -51,4 +51,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default MyZistsPage;

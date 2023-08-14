@@ -25,10 +25,8 @@ const PreviewCard = ({ data }: PreviewCardProps) => {
 
   const languageIcon = extensionToLanguage[extension as string];
 
-  console.log(languageIcon);
-
   return (
-    <div className="w-full lg:w-[calc(50%-2.5rem)] h-80 border-2 rounded-2xl overflow-hidden">
+    <div className="w-full lg:w-[calc(50%-1.25rem)] h-80 border-2 rounded-2xl overflow-hidden">
       <section>
         {gistContent ? (
           <CodePreview value={gistContent} language={language} />
@@ -38,7 +36,7 @@ const PreviewCard = ({ data }: PreviewCardProps) => {
       </section>
       <section className="p-5">
         <div className="flex items-center gap-10">
-          <p className="text-xl">{data?.filename}</p>
+          <p className="text-lg">{data?.filename}</p>
           {languageIcon && (
             <i
               className={`devicon-${languageIcon}-original text-white text-3xl`}

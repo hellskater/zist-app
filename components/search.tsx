@@ -1,22 +1,66 @@
-import { Input } from '@/components/ui/input';
+'use client';
 
-type SearchProps = {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-};
+import { useEffect, useState } from 'react';
 
-const Search = ({ onChange, placeholder, value }: SearchProps) => {
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command';
+
+function Search() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
+
   return (
-    <div>
-      <Input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-      />
-    </div>
+    <>
+      <div
+        onClick={() => setOpen(true)}
+        className="border px-4 h-[3.5rem] rounded-lg flex flex-col cursor-pointer justify-center"
+      >
+        <p className="text-lg flex items-center gap-3 text-muted-foreground">
+          <span>Search</span>
+          <kbd className="pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 py-2 font-mono text-base font-medium text-muted-foreground opacity-100">
+            <span className="text-base">⌘</span>J
+          </kbd>
+        </p>
+      </div>
+
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput placeholder="Type a command or search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Suggestions">
+            <CommandItem>
+              <span>Calendar</span>
+            </CommandItem>
+            <CommandItem>
+              <span>Search Emoji</span>
+            </CommandItem>
+            <CommandItem>
+              <span>Launch</span>
+            </CommandItem>
+          </CommandGroup>
+          <CommandSeparator />
+        </CommandList>
+      </CommandDialog>
+    </>
   );
-};
+}
 
 export default Search;
