@@ -1,14 +1,14 @@
 import { NextAuthOptions, type Profile, type Session } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 
-type CustomSession = {
+export type CustomSession = {
   accessToken: string;
   user: {
     id: number;
   };
 } & Session;
 
-type CustomProfile = {
+export type CustomProfile = {
   id: number;
 } & Profile;
 
@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
       (session as CustomSession).accessToken = token.accessToken as string;
       (session as CustomSession).user.id = token.id as number;
 
-      return session;
+      return session as CustomSession;
     },
   },
 };
