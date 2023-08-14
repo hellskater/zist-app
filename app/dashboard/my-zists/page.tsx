@@ -28,9 +28,15 @@ const MyZistsPage = () => {
   console.log(gists);
   return (
     <div className="min-h-screen">
-      <h1 className="text-4xl font-bold mt-10">My Zists</h1>
+      <h1 className="text-4xl font-bold mt-2">My Zists</h1>
       <section className="mt-10">
-        <Search />
+        <Search
+          gists={
+            gists?.map(
+              (gist: { files: GistFileData[] }) => Object.values(gist.files)[0]
+            ) || []
+          }
+        />
       </section>
 
       <section className="flex items-center gap-10 mt-10 flex-wrap">

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import ClientProviders from '@/components/providers';
+import Header from '@/components/header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -49,7 +50,12 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ClientProviders>{children}</ClientProviders>
+        <ClientProviders>
+          <>
+            <Header />
+            {children}
+          </>
+        </ClientProviders>
       </body>
     </html>
   );

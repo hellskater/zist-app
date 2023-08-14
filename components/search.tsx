@@ -12,7 +12,13 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 
-function Search() {
+import { GistFileData } from './preview/preview-card';
+
+type SearchProps = {
+  gists: GistFileData[];
+};
+
+function Search({ gists }: SearchProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -31,7 +37,7 @@ function Search() {
     <>
       <div
         onClick={() => setOpen(true)}
-        className="border px-4 h-[3.5rem] rounded-lg flex flex-col cursor-pointer justify-center"
+        className="border px-4 h-[3rem] rounded-lg flex flex-col cursor-pointer justify-center"
       >
         <p className="text-lg flex items-center gap-3 text-muted-foreground">
           <span>Search</span>
@@ -46,15 +52,11 @@ function Search() {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <span>Search Emoji</span>
-            </CommandItem>
-            <CommandItem>
-              <span>Launch</span>
-            </CommandItem>
+            {gists?.map((gist) => (
+              <CommandItem key={gist.filename}>
+                <span>{gist.filename}</span>
+              </CommandItem>
+            ))}
           </CommandGroup>
           <CommandSeparator />
         </CommandList>
