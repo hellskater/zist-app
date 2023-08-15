@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AiOutlineDelete, AiOutlineFolderOpen } from 'react-icons/ai';
 import { IoMdCreate } from 'react-icons/io';
+import { toast } from 'react-hot-toast';
 
 import {
   CommandDialog,
@@ -50,6 +51,7 @@ function CategoryCommand({
       description,
       gistId,
     });
+    toast.success('Category updated successfully!');
     setOpen(false);
   };
 
@@ -59,6 +61,7 @@ function CategoryCommand({
       description,
       gistId,
     });
+    toast.success('Category deleted successfully!');
     setOpen(false);
   };
 

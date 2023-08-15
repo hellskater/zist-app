@@ -56,6 +56,8 @@ function CreateCategoryDialog({
       gistId,
     });
 
+    toast.success('Category created successfully!');
+
     setIsOpen(false);
     closeCommandDialog();
   };
