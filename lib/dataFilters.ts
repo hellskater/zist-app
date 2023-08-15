@@ -1,9 +1,14 @@
 import { extensionToLanguage } from './constants/language';
 import { getDescription, getZistConfig } from './hooks/utils';
 import { Gist } from './types/gist';
-import { Filters } from './types/zist';
+import { Filters, SortOrder, Sorts } from './types/zist';
 
-export const getAllZistsData = (gists: Gist[] | undefined, filter: Filters) => {
+export const getAllZistsData = (
+  gists: Gist[] | undefined,
+  filter: Filters,
+  sort: Sorts,
+  sortOrder: SortOrder
+) => {
   let data: Gist[] = [...(gists || [])];
 
   // filters
@@ -93,21 +98,41 @@ export const getAllZistsData = (gists: Gist[] | undefined, filter: Filters) => {
   }
 
   // sorts
-  // sort by date
-  data = sortZistsByDate(data);
+  if (sort === 'updated') {
+    if (sortOrder === 'asc') {
+      data = data.sort((a: Gist, b: Gist) => {
+        const aDate = new Date(a.updated_at);
+        const bDate = new Date(b.updated_at);
 
-  return data;
-};
+        return aDate.getTime() - bDate.getTime();
+      });
+    } else {
+      data = data.sort((a: Gist, b: Gist) => {
+        const aDate = new Date(a.updated_at);
+        const bDate = new Date(b.updated_at);
 
-export const sortZistsByDate = (gists: Gist[] | undefined) => {
-  let data: Gist[] = [...(gists || [])];
+        return bDate.getTime() - aDate.getTime();
+      });
+    }
+  }
 
-  data = data.sort((a: Gist, b: Gist) => {
-    const aDate = new Date(a.updated_at);
-    const bDate = new Date(b.updated_at);
+  if (sort === 'created') {
+    if (sortOrder === 'asc') {
+      data = data.sort((a: Gist, b: Gist) => {
+        const aDate = new Date(a.created_at);
+        const bDate = new Date(b.created_at);
 
-    return bDate.getTime() - aDate.getTime();
-  });
+        return aDate.getTime() - bDate.getTime();
+      });
+    } else {
+      data = data.sort((a: Gist, b: Gist) => {
+        const aDate = new Date(a.created_at);
+        const bDate = new Date(b.created_at);
+
+        return bDate.getTime() - aDate.getTime();
+      });
+    }
+  }
 
   return data;
 };

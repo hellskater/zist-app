@@ -10,3 +10,7 @@ export type Filters = {
   language?: string;
   private?: boolean;
 };
+
+export type Sorts = 'updated' | 'created';
+
+export type SortOrder = 'asc' | 'desc';

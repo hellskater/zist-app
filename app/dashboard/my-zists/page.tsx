@@ -13,20 +13,24 @@ import {
 } from '@/lib/dataFilters';
 import { useGetAllGistsOfAuthenticatedUser } from '@/lib/hooks/useGists';
 import { Gist } from '@/lib/types/gist';
-import { Filters } from '@/lib/types/zist';
+import { Filters, SortOrder, Sorts } from '@/lib/types/zist';
 import CategoryFilter from '@/components/filters/category-filter';
 import LanguageFilter from '@/components/filters/language-filter';
 import TagsFilter from '@/components/filters/tags-filter';
 import PrivateFilter from '@/components/filters/private-filter';
+import SortDropdown from '@/components/sorts/sort';
+import SortOrderDropdown from '@/components/sorts/sort-order';
 
 const MyZistsPage = () => {
   const [filter, setFilter] = useState<Filters>();
+  const [sort, setSort] = useState<Sorts>('updated');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
   const { data: gists, isLoading } = useGetAllGistsOfAuthenticatedUser();
 
   const data = useMemo(
-    () => getAllZistsData(gists, filter as Filters),
-    [gists, filter]
+    () => getAllZistsData(gists, filter as Filters, sort, sortOrder),
+    [gists, filter, sort, sortOrder]
   );
 
   const categories = useMemo(() => getAllCategories(gists), [gists]);
@@ -92,6 +96,20 @@ const MyZistsPage = () => {
             allTags={allTags}
             selectedTags={filter?.tags}
             setSelectedTags={(value) => setFilter({ ...filter, tags: value })}
+          />
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-2xl font-bold">Sorts</h2>
+        <div className="flex items-center gap-10 mt-5 flex-wrap">
+          <SortDropdown
+            selectedSort={sort}
+            setSelectedSort={(value) => setSort(value)}
+          />
+          <SortOrderDropdown
+            selectedSortOrder={sortOrder}
+            setSelectedSortOrder={(value) => setSortOrder(value)}
           />
         </div>
       </section>
