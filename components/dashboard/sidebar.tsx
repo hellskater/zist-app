@@ -1,6 +1,5 @@
 import { BsCodeSlash } from 'react-icons/bs';
 import { IoMdCreate } from 'react-icons/io';
-import { IoAnalyticsOutline } from 'react-icons/io5';
 import { AiFillSetting } from 'react-icons/ai';
 import Link from 'next/link';
 
@@ -14,11 +13,6 @@ const items = [
     name: 'Create Zist',
     Icon: <IoMdCreate />,
     path: '/dashboard/create-zist',
-  },
-  {
-    name: 'Analytics',
-    Icon: <IoAnalyticsOutline />,
-    path: '/dashboard/analytics',
   },
   {
     name: 'Settings',

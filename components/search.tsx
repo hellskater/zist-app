@@ -9,13 +9,11 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from '@/components/ui/command';
-
-import { GistFileData } from './preview/preview-card';
+import { GistFileType } from '@/lib/types/gist';
 
 type SearchProps = {
-  gists: GistFileData[];
+  gists: GistFileType[];
 };
 
 function Search({ gists }: SearchProps) {
@@ -58,7 +56,6 @@ function Search({ gists }: SearchProps) {
               </CommandItem>
             ))}
           </CommandGroup>
-          <CommandSeparator />
         </CommandList>
       </CommandDialog>
     </>

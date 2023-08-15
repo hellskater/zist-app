@@ -3,26 +3,31 @@ import { VscJson } from 'react-icons/vsc';
 import { SiYaml } from 'react-icons/si';
 import { FaCode } from 'react-icons/fa';
 
-import { useGetGist } from '@/lib/hooks/useGists';
+import { useGetGistFile } from '@/lib/hooks/useGists';
 import { Skeleton } from '@/components/ui/skeleton';
 import { extensionToLanguage } from '@/lib/constants/language';
+import { GistFileType } from '@/lib/types/gist';
+import { getZistConfig } from '@/lib/hooks/utils';
 
 import CodePreview from './code-preview';
-
-export type GistFileData = {
-  filename: string;
-  language: string;
-  raw_url: string;
-  size: number;
-  type: string;
-};
+import CategoryCommand from './category/category-command';
 
 type PreviewCardProps = {
-  data: GistFileData;
+  data: GistFileType;
+  description: string;
+  categories: string[];
+  gistId: string;
 };
 
-const PreviewCard = ({ data }: PreviewCardProps) => {
-  const { data: gistContent } = useGetGist(data?.raw_url);
+const PreviewCard = ({
+  data,
+  description,
+  gistId,
+  categories,
+}: PreviewCardProps) => {
+  const { data: gistContent } = useGetGistFile(data?.raw_url);
+
+  const { category } = getZistConfig(description);
 
   const language = data?.language.toLowerCase();
 
@@ -61,6 +66,12 @@ const PreviewCard = ({ data }: PreviewCardProps) => {
         <div className="flex items-center gap-10">
           <p className="text-lg">{data?.filename}</p>
           {getIcon()}
+          <CategoryCommand
+            gistId={gistId}
+            description={description}
+            categories={categories}
+            category={category || ''}
+          />
         </div>
       </section>
     </div>

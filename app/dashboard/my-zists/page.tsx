@@ -1,80 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import PreviewCard, { GistFileData } from '@/components/preview/preview-card';
+import PreviewCard from '@/components/preview/preview-card';
 import Search from '@/components/search';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useGetAllGists, useGetGist } from '@/lib/hooks/useGists';
+import { getAllCategories, getAllZistsData } from '@/lib/dataFilters';
+import { useGetAllGistsOfAuthenticatedUser } from '@/lib/hooks/useGists';
+import { Gist } from '@/lib/types/gist';
 
 const MyZistsPage = () => {
-  const [configUrl, setConfigUrl] = useState<any>();
-  const { data: gists, isLoading } = useGetAllGists();
+  const { data: gists, isLoading } = useGetAllGistsOfAuthenticatedUser();
 
-  const { data: config } = useGetGist(configUrl);
+  const data = getAllZistsData(gists);
 
-  useEffect(() => {
-    if (gists) {
-      gists?.forEach((gist: { files: { [x: string]: any } }) => {
-        if (gist.files['zist.config.json']) {
-          setConfigUrl(gist.files['zist.config.json'].raw_url);
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gists]);
-
-  const getData = () => {
-    let data: any = [...(gists || [])];
-    // filters
-    // filter out gists with zist.config.json
-    data = data.filter((gist: { files: { [x: string]: any } }) => {
-      if (gist.files['zist.config.json']) {
-        return false;
-      }
-      return true;
-    });
-    // filter out gists with no files
-    data = data.filter((gist: { files: { [x: string]: any } }) => {
-      if (Object.keys(gist.files).length === 0) {
-        return false;
-      }
-      return true;
-    });
-
-    return data;
-  };
-
-  const data = getData();
+  const categories = getAllCategories(gists);
 
   const getGists = () => {
     return (
-      data?.map(
-        (gist: {
-          id: string;
-          files: {
-            [key: string]: GistFileData;
-          };
-        }) => {
-          return (
-            <PreviewCard data={Object.values(gist.files)[0]} key={gist.id} />
-          );
-        }
-      ) || []
+      data?.map((gist: Gist) => {
+        return (
+          <PreviewCard
+            data={Object.values(gist.files)[0]}
+            key={gist.id}
+            description={gist.description}
+            categories={categories}
+            gistId={gist.id}
+          />
+        );
+      }) || []
     );
   };
 
-  console.log(config);
   return (
     <div className="min-h-screen">
       <h1 className="text-4xl font-bold mt-2">My Zists</h1>
       <section className="mt-10">
         <Search
-          gists={
-            data?.map(
-              (gist: { files: GistFileData[] }) => Object.values(gist.files)[0]
-            ) || []
-          }
+          gists={data?.map((gist: Gist) => Object.values(gist.files)[0]) || []}
         />
       </section>
 
