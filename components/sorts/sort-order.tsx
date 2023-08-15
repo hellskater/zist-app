@@ -20,7 +20,7 @@ function SortOrderDropdown({ selectedSortOrder, setSelectedSortOrder }: Props) {
       onValueChange={(value) => setSelectedSortOrder(value as SortOrder)}
       value={selectedSortOrder || 'desc'}
     >
-      <SelectTrigger className="w-[180px] h-10">
+      <SelectTrigger className="w-[180px] h-10 capitalize">
         <SelectValue placeholder="Select an order" />
       </SelectTrigger>
       <SelectContent>

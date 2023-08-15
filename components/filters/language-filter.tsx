@@ -24,7 +24,7 @@ function LanguageFilter({
       onValueChange={(value) => setSelectedLanguage(value)}
       value={selectedLanguage}
     >
-      <SelectTrigger className="w-[180px] h-10">
+      <SelectTrigger className="w-[180px] h-10 capitalize">
         <SelectValue placeholder="Select a language" />
       </SelectTrigger>
       <SelectContent>

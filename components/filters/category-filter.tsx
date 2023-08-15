@@ -24,7 +24,7 @@ function CategoryFilter({
       onValueChange={(value) => setSelectedCategory(value)}
       value={selectedCategory}
     >
-      <SelectTrigger className="w-[180px] h-10">
+      <SelectTrigger className="w-[180px] h-10 capitalize">
         <SelectValue placeholder="Select a category" />
       </SelectTrigger>
       <SelectContent>

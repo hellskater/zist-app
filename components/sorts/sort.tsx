@@ -20,7 +20,7 @@ function SortDropdown({ selectedSort, setSelectedSort }: Props) {
       onValueChange={(value) => setSelectedSort(value as Sorts)}
       value={selectedSort || 'updated'}
     >
-      <SelectTrigger className="w-[180px] h-10">
+      <SelectTrigger className="w-[180px] h-10 capitalize">
         <SelectValue placeholder="Select a sort option" />
       </SelectTrigger>
       <SelectContent>
