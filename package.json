@@ -15,7 +15,7 @@
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
-    "@tanstack/react-query": "^4.32.0",
+    "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.32.6",
     "@types/node": "20.4.4",
     "@types/react": "18.2.15",
@@ -42,6 +42,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@types/randomcolor": "^0.5.7",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "eslint": "8.45.0",

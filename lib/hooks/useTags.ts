@@ -1,15 +1,15 @@
 import { usePatchGist } from './useGists';
 import { getZistConfig, updateDescription } from './utils';
 
-export const useCreateTag = () => {
-  const { mutate: updateGist, ...rest } = usePatchGist();
+export const useUpdateTags = () => {
+  const { mutateAsync: updateGist, ...rest } = usePatchGist();
 
-  const createTag = ({
-    tag,
+  const updateTags = async ({
+    tags,
     description,
     gistId,
   }: {
-    tag: string;
+    tags: string[];
     description: string;
     gistId: string;
   }) => {
@@ -17,52 +17,19 @@ export const useCreateTag = () => {
 
     config = {
       ...config,
-      tags: [...(config?.tags || []), tag],
+      tags,
     };
 
     const updatedDescription = updateDescription(description, config);
 
-    updateGist({
+    await updateGist({
       description: updatedDescription,
       id: gistId,
     });
   };
 
   return {
-    createTag,
-    ...rest,
-  };
-};
-
-export const useDeleteTag = () => {
-  const { mutate: updateGist, ...rest } = usePatchGist();
-
-  const deleteTag = ({
-    tag,
-    description,
-    gistId,
-  }: {
-    tag: string;
-    description: string;
-    gistId: string;
-  }) => {
-    let config = getZistConfig(description);
-
-    config = {
-      ...config,
-      tags: config.tags?.filter((t: string) => t !== tag),
-    };
-
-    const updatedDescription = updateDescription(description, config);
-
-    updateGist({
-      description: updatedDescription,
-      id: gistId,
-    });
-  };
-
-  return {
-    deleteTag,
+    updateTags,
     ...rest,
   };
 };

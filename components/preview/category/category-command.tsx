@@ -66,7 +66,7 @@ function CategoryCommand({
     <>
       <div
         onClick={() => setOpen(true)}
-        className={`border px-3 h-[2.5rem] ${
+        className={`border px-3 h-[2.3rem] ${
           category ? 'border-green-500' : 'border-slate-700 border-2'
         } rounded-lg flex items-center gap-2 cursor-pointer justify-center`}
       >

@@ -3,7 +3,11 @@
 import PreviewCard from '@/components/preview/preview-card';
 import Search from '@/components/search';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getAllCategories, getAllZistsData } from '@/lib/dataFilters';
+import {
+  getAllCategories,
+  getAllTags,
+  getAllZistsData,
+} from '@/lib/dataFilters';
 import { useGetAllGistsOfAuthenticatedUser } from '@/lib/hooks/useGists';
 import { Gist } from '@/lib/types/gist';
 
@@ -13,6 +17,8 @@ const MyZistsPage = () => {
   const data = getAllZistsData(gists);
 
   const categories = getAllCategories(gists);
+
+  const allTags = getAllTags(gists);
 
   const getGists = () => {
     return (
@@ -24,6 +30,8 @@ const MyZistsPage = () => {
             description={gist.description}
             categories={categories}
             gistId={gist.id}
+            allTags={allTags}
+            numberOfFiles={Object.keys(gist.files).length}
           />
         );
       }) || []
@@ -44,7 +52,7 @@ const MyZistsPage = () => {
           Array.from({ length: 6 }).map((_, i) => (
             <Skeleton
               key={i}
-              className="w-full lg:w-[calc(50%-2.5rem)] h-80 rounded-2xl"
+              className="w-full lg:w-[calc(50%-2.5rem)] h-96 rounded-2xl"
             />
           ))
         ) : getGists().length > 0 ? (

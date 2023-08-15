@@ -48,3 +48,19 @@ export const getAllCategories = (gists: Gist[] | undefined) => {
 
   return categories;
 };
+
+export const getAllTags = (gists: Gist[] | undefined) => {
+  let tagsData: string[] = [];
+
+  gists?.forEach((gist: Gist) => {
+    const { tags } = getZistConfig(gist.description);
+
+    if (tags) {
+      tagsData = [...tagsData, ...tags];
+    }
+  });
+
+  tagsData = Array.from(new Set(tagsData));
+
+  return tagsData;
+};
