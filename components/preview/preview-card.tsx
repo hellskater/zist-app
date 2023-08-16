@@ -90,8 +90,6 @@ const PreviewCard = ({
   };
 
   const handleAutoTag = useCallback(async () => {
-    // {availableTags:[string, string], availableCategories: [string, string], files: [{fileName:string , fileContent:string}]}
-
     const filesData = await getFilesData(files);
 
     const payload = {
@@ -146,6 +144,7 @@ const PreviewCard = ({
     } catch {
       toast.error('Failed to auto tag!');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complete]);
 
   return (
