@@ -32,6 +32,16 @@
     --destructive-foreground: 0 85.7% 97.3%;
 
     --ring: 0 0% 14.9%;
+
+    --zist-highlight-default: #000000;
+    --zist-highlight-purple: #3f2c4b;
+    --zist-highlight-red: #5c1a1a;
+    --zist-highlight-yellow: #5c4b1a;
+    --zist-highlight-blue: #1a3d5c;
+    --zist-highlight-green: #1a5c20;
+    --zist-highlight-orange: #5c3a1a;
+    --zist-highlight-pink: #5c1a3a;
+    --zist-highlight-gray: #3a3a3a;
   }
 }
 
@@ -45,4 +55,13 @@
 }
 
 @layer utilities {
+  .slash-command-scroll::-webkit-scrollbar {
+    @apply w-2;
+  }
+  .slash-command-scroll::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  .slash-command-scroll::-webkit-scrollbar-thumb {
+    @apply bg-stone-600 rounded-full;
+  }
 }
