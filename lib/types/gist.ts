@@ -7,9 +7,7 @@ export type Gist = {
   git_pull_url: string;
   git_push_url: string;
   html_url: string;
-  files: {
-    [filename: string]: GistFileType;
-  };
+  files: Files;
   public: boolean;
   created_at: string;
   updated_at: string;
@@ -21,6 +19,10 @@ export type Gist = {
   forks: any[]; // Empty array provided, so using any[] for now
   history: History[];
   truncated: boolean;
+};
+
+export type Files = {
+  [filename: string]: GistFileType;
 };
 
 export type GistFileType = {

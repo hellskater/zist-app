@@ -20,15 +20,20 @@ const CodePreview = ({ value, language }: Props) => {
 
   const getValue = () => {
     if (typeof value === 'string') {
-      return value;
+      // only include the first 1000 characters
+      return value.substring(0, 100);
     } else {
       return JSON.stringify(value, null, 2);
     }
   };
 
   return (
-    <pre className="h-40 w-full">
-      <code ref={codeEl} className={`h-full ${language}`}>
+    <pre className="max-h-40 h-40 w-full">
+      <code
+        style={{ overflow: 'hidden' }}
+        ref={codeEl}
+        className={`h-full ${language}`}
+      >
         {getValue()}
       </code>
     </pre>
