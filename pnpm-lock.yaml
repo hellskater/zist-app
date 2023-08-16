@@ -125,15 +125,15 @@ dependencies:
   kysely-planetscale:
     specifier: ^1.4.0
     version: 1.4.0(@planetscale/database@1.10.0)(kysely@0.26.1)
-  monaco-editor:
-    specifier: ^0.41.0
-    version: 0.41.0
   lowlight:
     specifier: ^2.9.0
     version: 2.9.0
   lucide-react:
     specifier: ^0.268.0
     version: 0.268.0(react@18.2.0)
+  monaco-editor:
+    specifier: ^0.41.0
+    version: 0.41.0
   next:
     specifier: 13.4.12
     version: 13.4.12(react-dom@18.2.0)(react@18.2.0)
@@ -146,9 +146,6 @@ dependencies:
   postcss:
     specifier: 8.4.27
     version: 8.4.27
-  prettier:
-    specifier: ^3.0.0
-    version: 3.0.0
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -226,6 +223,9 @@ devDependencies:
   lint-staged:
     specifier: ^13.2.3
     version: 13.2.3
+  prettier:
+    specifier: ^3.0.0
+    version: 3.0.0
 
 packages:
 
@@ -4647,6 +4647,7 @@ packages:
     resolution: {integrity: sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
 
   /pretty-format@3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
@@ -5193,10 +5194,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /state-local@1.0.7:
-    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
-    dev: false
-
   /sswr@2.0.0(svelte@4.2.0):
     resolution: {integrity: sha512-mV0kkeBHcjcb0M5NqKtKVg/uTIYNlIIniyDfSGrSfxpEdM9C365jK0z55pl9K0xAkNTJi2OAOVFQpgMPUk+V0w==}
     peerDependencies:
@@ -5204,6 +5201,10 @@ packages:
     dependencies:
       svelte: 4.2.0
       swrev: 4.0.0
+    dev: false
+
+  /state-local@1.0.7:
+    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
     dev: false
 
   /streamsearch@1.1.0:

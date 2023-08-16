@@ -15,20 +15,17 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   value,
   handleOnChange,
 }) => {
-  // const handleEditorDidMount = (editor: Monaco, monaco: any) => {
-  //   // Use the editor and monaco objects here if needed
-  // };
-
   return (
     <Editor
-      className="bg-background"
-      height="400px"
+      options={options}
       language={language}
       value={value}
       theme={theme}
-      options={options}
+      height="310px"
+      defaultLanguage="javascript"
+      defaultValue="\n // Hello Zist"
       onChange={handleOnChange}
-      //   onMount={handleEditorDidMount}
+      className="bg-var(--background) border-gray-800"
     />
   );
 };

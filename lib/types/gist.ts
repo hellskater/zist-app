@@ -33,6 +33,14 @@ export type GistFileType = {
   size: number;
 };
 
+export type CreateFiles = {
+  [filename: string]: {
+    content: string;
+    language: string;
+    filename: string;
+  };
+};
+
 type User = {
   login: string;
   id: number;

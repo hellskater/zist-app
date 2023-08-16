@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 
 import { CustomProfile, CustomSession } from '../auth';
-import { Gist, GistFileType } from '../types/gist';
+import { CreateFiles, Gist, GistFileType } from '../types/gist';
 
 // ---------------------------------- GET all authenticated gists ----------------------------------
 
@@ -211,9 +211,9 @@ export const usePatchGist = () => {
 
 // ---------------------------------- POST gist ----------------------------------
 
-type GistCreatePayload = {
+export type GistCreatePayload = {
   description?: string;
-  files: GistFileType[];
+  files: CreateFiles;
   public?: boolean;
 };
 
