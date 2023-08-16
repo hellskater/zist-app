@@ -90,13 +90,16 @@ export const useGetGistById = (id: string) => {
 
 // ---------------------------------- GET gist file ----------------------------------
 
-export const getGistFile = async (raw_url: string) => {
+export const getGistFile = async (raw_url: string | undefined) => {
+  if (!raw_url) {
+    return;
+  }
   const response = await axios.get(raw_url);
 
   return response.data;
 };
 
-export const useGetGistFile = (raw_url: string) => {
+export const useGetGistFile = (raw_url: string | undefined) => {
   return useQuery(['gistFile', raw_url], () => getGistFile(raw_url), {
     enabled: !!raw_url,
   });

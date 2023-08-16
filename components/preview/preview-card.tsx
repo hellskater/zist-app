@@ -11,6 +11,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
+import Link from 'next/link';
+import { FiEye } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 import { useGetGistFile } from '@/lib/hooks/useGists';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,6 +54,8 @@ const PreviewCard = ({
   const data = files[Object.keys(files)[0]];
   const numberOfFiles = Object.keys(files).length;
   const { data: gistContent } = useGetGistFile(data?.raw_url);
+
+  const router = useRouter();
 
   const { getFilesData } = useGetAllFilesOfGist();
 
@@ -155,7 +160,22 @@ const PreviewCard = ({
   }, [complete]);
 
   return (
-    <div className="w-full relative lg:w-[calc(50%-1.25rem)] h-96 border-2 rounded-2xl overflow-hidden">
+    <div
+      onClick={() => {
+        if (!isPublic) return;
+        router.push(`/gist/${gistId}`);
+      }}
+      className={`w-full relative lg:w-[calc(50%-1.25rem)] h-96 border-2 rounded-2xl overflow-hidden ${
+        isPublic
+          ? 'cursor-pointer hover:-translate-y-2 transition-all duration-200'
+          : ''
+      }`}
+    >
+      {!isPublic && (
+        <Link href={`/gist/${gistId}`}>
+          <FiEye className="absolute top-3 bg-black p-[0.4rem] rounded-md text-3xl right-3 text-white cursor-pointer hover:text-yellow-500 transition-all duration-300" />
+        </Link>
+      )}
       <section>
         {gistContent ? (
           <CodePreview value={gistContent} language={language} />
