@@ -81,7 +81,7 @@ export const useGetGistById = (id: string) => {
 
 // ---------------------------------- GET gist file ----------------------------------
 
-const getGistFile = async (raw_url: string) => {
+export const getGistFile = async (raw_url: string) => {
   const response = await axios.get(raw_url);
 
   return response.data;

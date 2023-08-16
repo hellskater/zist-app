@@ -55,7 +55,7 @@ export const useUpdateCategory = () => {
 
     const updatedDescription = updateDescription(description, config);
 
-    await updateGist({
+    return await updateGist({
       description: updatedDescription,
       id: gistId,
     });
@@ -84,7 +84,7 @@ export const useDeleteCategory = () => {
 
     const updatedDescription = updateDescription(description, config);
 
-    await updateGist({
+    return await updateGist({
       description: updatedDescription,
       id: gistId,
     });

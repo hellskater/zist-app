@@ -44,13 +44,12 @@ const MyZistsPage = () => {
       data?.map((gist: Gist) => {
         return (
           <PreviewCard
-            data={Object.values(gist.files)[0]}
+            files={gist.files}
             key={gist.id}
             description={gist.description}
             categories={categories}
             gistId={gist.id}
             allTags={allTags}
-            numberOfFiles={Object.keys(gist.files).length}
           />
         );
       }) || []
