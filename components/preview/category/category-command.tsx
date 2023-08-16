@@ -82,7 +82,7 @@ function CategoryCommand({
       >
         <AiOutlineFolderOpen />
         <p className="text-sm flex items-center gap-3 text-muted-foreground">
-          {category || (isPublic ? 'No Category' : 'Select a category')}
+          {category || (isPublic ? 'No Category' : 'Select category')}
         </p>
       </div>
 

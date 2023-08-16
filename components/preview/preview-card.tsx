@@ -164,8 +164,8 @@ const PreviewCard = ({
         )}
       </section>
       <section className="p-5">
-        <div className="flex items-center gap-10">
-          <p className="text-lg">{data?.filename}</p>
+        <div className="flex items-center gap-5 justify-between">
+          <p className="text-base">{data?.filename}</p>
           {getIcon()}
           <CategoryCommand
             isPublic={isPublic}
