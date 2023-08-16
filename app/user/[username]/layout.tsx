@@ -8,7 +8,7 @@ export default async function UserLayout({
   params: { username: string };
 }) {
   return (
-    <div className="p-5 pt-24 flex gap-12 overflow-x-hidden">
+    <div className="p-5 pt-24 flex gap-12">
       <section className="w-[20%]">
         <UserProfile username={params?.username} />
       </section>

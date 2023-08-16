@@ -6,11 +6,24 @@ import { FiUsers } from 'react-icons/fi';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGithubProfile } from '@/lib/hooks/useGithubProfile';
+import { User } from '@/lib/types/gist';
 
-export default function UserProfile({ username }: { username: string }) {
-  const { data, isLoading } = useGithubProfile(username);
+type Props = {
+  username?: string;
+  userData?: User;
+  isGistLoading?: boolean;
+};
 
-  if (!isLoading && !data) {
+export default function UserProfile({
+  username,
+  userData,
+  isGistLoading,
+}: Props) {
+  const { data, isLoading: isProfileLoading } = useGithubProfile(username);
+
+  const isLoading = username ? isProfileLoading : isGistLoading;
+
+  if (!userData && !isLoading && !data) {
     return (
       <div className="w-full min-w-[13rem] text-white p-4">
         <p>User not found</p>
@@ -18,16 +31,18 @@ export default function UserProfile({ username }: { username: string }) {
     );
   }
 
+  const user = userData || data;
+
   return (
-    <div className="w-full min-w-[13rem] text-white p-4">
+    <div className="w-full min-w-[13rem] text-white p-4 sticky top-28">
       <div className="max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
         <div className="relative h-40 w-40">
           {isLoading ? (
             <Skeleton className="rounded-full h-full w-full object-contain" />
           ) : (
             <Image
-              src={data.avatar_url}
-              alt={data.name}
+              src={user.avatar_url}
+              alt={user.name}
               layout="fill"
               className="rounded-full object-contain"
             />
@@ -44,26 +59,26 @@ export default function UserProfile({ username }: { username: string }) {
             </div>
           ) : (
             <>
-              <h1 className="text-2xl font-bold">{data.name}</h1>
-              <p className="text-sm text-gray-400">@{data.login}</p>
-              <p className="mt-4 text-sm">{data.bio}</p>
+              <h1 className="text-2xl font-bold">{user.name}</h1>
+              <p className="text-sm text-gray-400">@{user.login}</p>
+              <p className="mt-4 text-sm">{user.bio}</p>
               <div className="mt-4 flex items-center text-sm space-x-2">
                 <FiUsers className="text-xl text-white" />
                 <span className="text-gray-400">
-                  {data.followers} follower{data.followers > 1 ? 's' : ''}
+                  {user.followers} follower{user.followers > 1 ? 's' : ''}
                 </span>
               </div>
 
               <div className="mt-4 flex items-center text-sm space-x-2">
                 <BsCodeSquare className="text-xl text-white" />
                 <span className="text-gray-400">
-                  {data.public_gists} gist{data.public_gists > 1 ? 's' : ''}
+                  {user.public_gists} gist{user.public_gists > 1 ? 's' : ''}
                 </span>
               </div>
 
               <div className="mt-4">
                 <a
-                  href={data.html_url}
+                  href={user.html_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline"

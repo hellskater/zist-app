@@ -4,7 +4,10 @@ import { useSession } from 'next-auth/react';
 
 import { CustomSession } from '../auth';
 
-const getGithubProfile = async (username: string, accessToken: string) => {
+const getGithubProfile = async (
+  username: string | undefined,
+  accessToken: string
+) => {
   const response = await axios.get(`https://api.github.com/users/${username}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -14,7 +17,7 @@ const getGithubProfile = async (username: string, accessToken: string) => {
   return response.data;
 };
 
-export const useGithubProfile = (username: string) => {
+export const useGithubProfile = (username: string | undefined) => {
   const { data: session } = useSession();
 
   return useQuery(
