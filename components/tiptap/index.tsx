@@ -16,7 +16,7 @@ import { ImageResizer } from './components/image-resizer';
 export default function Editor() {
   const [content, setContent] = useLocalStorage(
     'content',
-    '++\n\n# Start writing here!'
+    '### Start writing here!'
   );
   const [saveStatus, setSaveStatus] = useState('Saved');
 

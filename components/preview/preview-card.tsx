@@ -8,6 +8,9 @@ import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { useCompletion } from 'ai/react';
 import { toast } from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import { useGetGistFile } from '@/lib/hooks/useGists';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -32,6 +35,8 @@ type PreviewCardProps = {
   categories: string[];
   gistId: string;
   allTags: string[];
+  isPublic?: boolean;
+  updated_at: string;
 };
 
 const PreviewCard = ({
@@ -40,6 +45,8 @@ const PreviewCard = ({
   gistId,
   categories,
   allTags,
+  isPublic,
+  updated_at,
 }: PreviewCardProps) => {
   const data = files[Object.keys(files)[0]];
   const numberOfFiles = Object.keys(files).length;
@@ -65,7 +72,7 @@ const PreviewCard = ({
 
   const descriptionText = getDescription(description);
 
-  const language = data?.language.toLowerCase();
+  const language = data?.language?.toLowerCase();
 
   const extension = data?.filename.split('.').pop();
 
@@ -161,6 +168,7 @@ const PreviewCard = ({
           <p className="text-lg">{data?.filename}</p>
           {getIcon()}
           <CategoryCommand
+            isPublic={isPublic}
             gistId={gistId}
             description={description}
             categories={categories}
@@ -182,17 +190,24 @@ const PreviewCard = ({
                 </span>
               ))}
             </div>
-            <div onClick={() => setIsTagsDialogOpen(true)} title="Edit tags">
-              <AiFillEdit className="text-white text-3xl cursor-pointer hover:bg-zinc-900 p-1 transition-all duration-300 rounded-md" />
-            </div>
+            {!isPublic && (
+              <div onClick={() => setIsTagsDialogOpen(true)} title="Edit tags">
+                <AiFillEdit className="text-white text-3xl cursor-pointer hover:bg-zinc-900 p-1 transition-all duration-300 rounded-md" />
+              </div>
+            )}
           </div>
         ) : (
           <div
-            onClick={() => setIsTagsDialogOpen(true)}
-            className="flex text-sm items-center gap-2 border border-yellow-800 cursor-pointer hover:bg-zinc-800 transition-all duration-300 bg-zinc-900 rounded-md px-3 py-2 w-fit"
+            onClick={() => {
+              if (isPublic) return;
+              setIsTagsDialogOpen(true);
+            }}
+            className={`flex text-sm items-center gap-2 border border-yellow-800 ${
+              !isPublic && 'cursor-pointer hover:bg-zinc-800'
+            } transition-all duration-300 bg-zinc-900 rounded-md px-3 py-2 w-fit`}
           >
             <AiOutlineTags className="text-white text-xl" />
-            <p>Add Tags</p>
+            <p>{isPublic ? 'No tags' : 'Add tags'}</p>
           </div>
         )}
         <TagsDialog
@@ -204,25 +219,27 @@ const PreviewCard = ({
           description={description}
         />
       </section>
-      <section className="px-5 mt-5 flex items-center gap-5">
+      <section className="px-5 mt-5 flex items-center gap-3">
         <div className="flex items-center gap-2 text-gray-400">
           <VscFiles />
           <p>
             {numberOfFiles} file{numberOfFiles > 1 ? 's' : ''}
           </p>
+          <p className="text-sm ml-2">Updated {dayjs(updated_at).fromNow()}</p>
         </div>
-
-        <div
-          onClick={handleAutoTag}
-          className="flex items-center gap-2 hover:bg-zinc-800 text-gray-300 hover:text-yellow-500 cursor-pointer py-1 px-3 transition-all duration-300 rounded-md"
-        >
-          <FaWandMagicSparkles
-            className={`text-xl transition-all duration-100 ${
-              isAutoTagging ? 'animate-spin' : ''
-            }`}
-          />
-          <p>Auto Tag</p>
-        </div>
+        {!isPublic && (
+          <div
+            onClick={handleAutoTag}
+            className="flex items-center text-sm gap-2 hover:bg-zinc-800 text-gray-300 hover:text-yellow-500 cursor-pointer py-1 px-3 transition-all duration-300 rounded-md"
+          >
+            <FaWandMagicSparkles
+              className={`text-xl transition-all duration-100 ${
+                isAutoTagging ? 'animate-spin' : ''
+              }`}
+            />
+            <p>Auto Tag</p>
+          </div>
+        )}
       </section>
       {descriptionText && (
         <section className="px-5 mt-3 text-sm text-gray-400">

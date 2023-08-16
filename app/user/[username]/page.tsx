@@ -11,22 +11,21 @@ import {
   getAllTags,
   getAllZistsData,
 } from '@/lib/dataFilters';
-import { useGetAllGistsOfAuthenticatedUser } from '@/lib/hooks/useGists';
+import { useGetAllGistsOfUser } from '@/lib/hooks/useGists';
 import { Gist } from '@/lib/types/gist';
 import { Filters, SortOrder, Sorts } from '@/lib/types/zist';
 import CategoryFilter from '@/components/filters/category-filter';
 import LanguageFilter from '@/components/filters/language-filter';
 import TagsFilter from '@/components/filters/tags-filter';
-import PrivateFilter from '@/components/filters/private-filter';
 import SortDropdown from '@/components/sorts/sort';
 import SortOrderDropdown from '@/components/sorts/sort-order';
 
-const MyZistsPage = () => {
+const UserPage = ({ params }: { params: { username: string } }) => {
   const [filter, setFilter] = useState<Filters>();
   const [sort, setSort] = useState<Sorts>('updated');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
-  const { data: gists, isLoading } = useGetAllGistsOfAuthenticatedUser();
+  const { data: gists, isLoading } = useGetAllGistsOfUser(params?.username);
 
   const data = useMemo(
     () => getAllZistsData(gists, filter as Filters, sort, sortOrder),
@@ -50,6 +49,7 @@ const MyZistsPage = () => {
             categories={categories}
             gistId={gist.id}
             allTags={allTags}
+            isPublic={true}
             updated_at={gist.updated_at}
           />
         );
@@ -58,8 +58,8 @@ const MyZistsPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <h1 className="text-4xl font-bold mt-2">My Zists</h1>
+    <div className="min-h-screen pr-10">
+      <h1 className="text-4xl font-bold mt-2">Zists</h1>
       <section className="mt-10">
         <Search
           searchInput={filter?.search || ''}
@@ -83,10 +83,6 @@ const MyZistsPage = () => {
             setSelectedLanguage={(value) =>
               setFilter({ ...filter, language: value })
             }
-          />
-          <PrivateFilter
-            checked={filter?.private || false}
-            onChange={(value) => setFilter({ ...filter, private: value })}
           />
         </div>
 
@@ -132,4 +128,4 @@ const MyZistsPage = () => {
   );
 };
 
-export default MyZistsPage;
+export default UserPage;

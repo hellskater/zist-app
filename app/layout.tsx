@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 
 import ClientProviders from '@/components/providers';
 import Header from '@/components/header';
+import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -50,7 +51,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"
         />
       </head>
-      <body className={inter.className}>
+      <body className={cn(inter.className, 'overflow-x-hidden')}>
         <ClientProviders>
           <>
             <Header />
