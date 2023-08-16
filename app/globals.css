@@ -42,4 +42,17 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Hide the minimap */
+}
+.monaco-editor .minimap,
+.monaco-editor .minimap-slider {
+  display: none;
+}
+
+/* Hide the minimap decoration layer */
+.monaco-editor .decorationsOverviewRuler {
+  display: none !important;
+}
+.monaco-scrollable-element {
+  width: 6px;
 }
