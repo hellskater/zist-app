@@ -1,39 +1,34 @@
-import { MouseEventHandler, useState } from 'react';
+import React, { useState } from 'react';
+import { Editor } from '@monaco-editor/react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { GistCreatePayload, usePostGist } from '@/lib/hooks/useGists';
-import { extensionToLanguage } from '@/lib/constants/language';
+// import { GistCreatePayload, usePostGist } from '@/lib/hooks/useGists';
+// import { extensionToLanguage } from '@/lib/constants/language';
+import { defaultFontMapper, displayFontMapper } from '@/app/styles/fonts';
+import { cn } from '@/lib/utils';
 
-import CodeEditor from './CodeEditor';
+import './monaco-theme';
 
-type Props = {
-  isOpen: boolean;
-  handleCloseDialog: MouseEventHandler<HTMLButtonElement>;
-};
+type CreateCodeContainerProps = {};
 
-const config = {
+const options = {
   minimap: { enabled: false },
-  autoClosingBrackets: true,
-  lineNumbers: false,
+  lineNumbers: undefined,
   overviewRulerLanes: 0,
-  bracketPairColorization: true,
-  autoClosingQuotes: true,
   scrollbar: {
     verticalScrollbarSize: 5,
     horizontalScrollbarSize: 5,
   },
 };
 
-function CreateCodeContainer({}: Props) {
+const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({}) => {
   const [code, setCode] = useState('');
-  const [fileMeta, setFileMeta] = useState({
-    name: '',
-    description: '',
-    tags: [],
-  });
+  // const [fileMeta, setFileMeta] = useState({
+  //   name: '',
+  //   description: '',
+  //   tags: [],
+  // });
 
-  const postGistMutation = usePostGist();
+  // const postGistMutation = usePostGist();
 
   const handleOnChange = (newValue: string | undefined) => {
     if (newValue !== undefined) {
@@ -41,74 +36,68 @@ function CreateCodeContainer({}: Props) {
     }
   };
 
-  const handleFileMetaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFileMeta((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  // const handleFileMetaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   setFileMeta((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
 
-  const handleSubmit = async () => {
-    const extension = fileMeta?.name.split('.').pop();
-    const filename = fileMeta.name;
+  // const handleSubmit = async () => {
+  //   const extension = fileMeta?.name.split('.').pop();
+  //   const filename = fileMeta.name;
 
-    const data: GistCreatePayload = {
-      description: fileMeta.description,
-      files: {
-        [filename]: {
-          content: code,
-          language: extensionToLanguage[extension as string],
-          filename: filename,
+  //   const data: GistCreatePayload = {
+  //     description: fileMeta.description,
+  //     files: {
+  //       [filename]: {
+  //         content: code,
+  //         language: extensionToLanguage[extension as string],
+  //         filename: filename,
+  //       },
+  //     },
+  //     public: true,
+  //   };
+  //   await postGistMutation.mutateAsync(data);
+  // };
+
+  function setEditorTheme(monaco: any) {
+    monaco.editor.defineTheme('onedark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        {
+          token: 'comment',
+          foreground: '#5d7988',
+          fontStyle: 'italic',
         },
+        { token: 'constant', foreground: '#e06c75' },
+      ],
+      colors: {
+        'editor.background': '#0a0a0acc',
       },
-      public: true,
-    };
-    await postGistMutation.mutateAsync(data);
-  };
+    });
+  }
 
   return (
     <div>
-      <Input
-        onChange={handleFileMetaChange}
-        value={fileMeta.description}
-        type="text"
-        name="description"
-        id="description"
-        placeholder="File Description..."
-        className="p-2 mt-2 mb-2 rounded-l"
+      <Editor
+        options={options}
+        language="javascript"
+        value={code}
+        beforeMount={setEditorTheme}
+        theme="onedark"
+        defaultLanguage="javascript"
+        defaultValue="// Hello Zist"
+        onChange={handleOnChange}
+        className={
+          (cn(displayFontMapper.Default, defaultFontMapper.Default),
+          'relative min-h-[500px] w-full text-xl max-w-screen-lg border-stone-700 p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
+        }
       />
-
-      <div className="p-4px border-2 rounded-xl border-input">
-        <div className="rounded-t-8 flex bg-[#151718]">
-          <Input
-            onChange={handleFileMetaChange}
-            value={fileMeta.name}
-            type="text"
-            name="name"
-            id="name"
-            placeholder="File Name"
-            className="p-2 mt-2 mb-2 ml-2 w-30"
-          />
-        </div>
-        <div className="p-2 border border-1 border-input">
-          <div className="grid gap-4 py-4">
-            <CodeEditor
-              language="javascript"
-              theme="vs-dark"
-              options={config}
-              value={code}
-              handleOnChange={handleOnChange}
-            />
-          </div>
-          <section>
-            <Button type="submit" onClick={handleSubmit}>
-              Save changes
-            </Button>
-          </section>
-        </div>
-      </div>
     </div>
   );
-}
+};
+
 export default CreateCodeContainer;
