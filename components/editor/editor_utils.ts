@@ -53,7 +53,6 @@ export const handleFileTypeChange = (
   gistData: GistData,
   setGistData: React.Dispatch<React.SetStateAction<GistData>>
 ) => {
-  console.log('FILE NOW', fileId, type);
   const updatedFiles = gistData.files.map((file) =>
     file.id === fileId
       ? {
@@ -111,7 +110,6 @@ export const removeFile = (
 
   const type = updatedFiles.length > 0 ? updatedFiles[0].type : '';
   const id = updatedFiles.length > 0 ? updatedFiles[0].id : '';
-  console.log('VALUES HERE', id, type);
   handleSelectFile(id, type, setSelectedFileId, setCurrentActiveTab);
 };
 

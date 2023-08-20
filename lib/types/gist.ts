@@ -84,5 +84,6 @@ export type File = {
 
 export type GistData = {
   description: string;
+  public: boolean;
   files: File[];
 };
