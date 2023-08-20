@@ -7,6 +7,7 @@ import {
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 import { CustomProfile, CustomSession } from '../auth';
 import { CreateFiles, Gist, GistFileType } from '../types/gist';
@@ -232,6 +233,7 @@ export const usePostGist = () => {
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
+  const history = useRouter();
 
   return useMutation(
     (data: GistCreatePayload) =>
@@ -244,10 +246,16 @@ export const usePostGist = () => {
       onSuccess: (data) => {
         queryClient.setQueryData(
           ['gists', (session?.user as CustomProfile)?.id],
-          ((old: Gist[]) => {
-            return [...old, data] as Gist[];
+          ((old: Gist[] | undefined) => {
+            const newData = data as Gist;
+            if (old) {
+              return [...old, newData] as Gist[];
+            } else {
+              return [newData];
+            }
           }) as Updater<Gist[] | undefined, Gist[] | undefined>
         );
+        history.push('/dashboard/my-zists');
       },
     }
   );

@@ -6,28 +6,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { GistData } from '@/lib/types/gist';
 
 type Props = {
-  allFiles: string[];
-  selectedFile: string | undefined;
-  setCurrentFile: (category: string) => void;
+  gistData: GistData;
+  selectedFileId: string | null;
+  onChange: (category: string) => void;
 };
 
-function FileSelector({ allFiles, selectedFile, setCurrentFile }: Props) {
+function FileSelector({ gistData, selectedFileId, onChange }: Props) {
   return (
     <Select
-      defaultValue={selectedFile}
-      onValueChange={(value) => setCurrentFile(value)}
-      value={selectedFile}
+      defaultValue={selectedFileId || ''}
+      onValueChange={(value) => onChange(value)}
+      value={selectedFileId || ''}
     >
-      <SelectTrigger className="w-[180px] h-10 capitalize">
+      <SelectTrigger className="w-[180px] h-10 text-normal-case">
         <SelectValue placeholder="Select a file" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {allFiles.map((file) => (
-            <SelectItem key={file} value={file}>
-              {file}
+          {gistData.files.map((file) => (
+            <SelectItem
+              className="text-normal-case"
+              key={file.id}
+              value={file.id}
+            >
+              {file.filename}
             </SelectItem>
           ))}
         </SelectGroup>

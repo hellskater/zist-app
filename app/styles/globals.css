@@ -80,3 +80,12 @@
 .monaco-scrollable-element {
   width: 6px;
 } */
+
+.monaco-editor .margin-view-overlays .margin-view-overlay {
+  padding: 0 !important; /* Remove padding */
+}
+
+.monaco-scrollable-element {
+  left: auto !important; /* Remove the left property */
+  overflow: visible !important;
+}

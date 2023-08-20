@@ -1,67 +1,30 @@
-import React, { useState } from 'react';
-import { Editor } from '@monaco-editor/react';
+import React from 'react';
+import { Editor, OnChange } from '@monaco-editor/react';
 
-// import { GistCreatePayload, usePostGist } from '@/lib/hooks/useGists';
-// import { extensionToLanguage } from '@/lib/constants/language';
 import { defaultFontMapper, displayFontMapper } from '@/app/styles/fonts';
 import { cn } from '@/lib/utils';
 
-import './monaco-theme';
-
-type CreateCodeContainerProps = {};
+type CreateCodeContainerProps = {
+  handleOnChange: OnChange;
+  value: string;
+};
 
 const options = {
   minimap: { enabled: false },
-  lineNumbers: undefined,
+  lineNumbers: 'off' as const,
+  scrollBeyondLastLine: false,
   overviewRulerLanes: 0,
   scrollbar: {
-    verticalScrollbarSize: 5,
+    vertical: 'visible' as const,
+    verticalScrollbarSize: 0,
     horizontalScrollbarSize: 5,
   },
 };
 
-const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({}) => {
-  const [code, setCode] = useState('');
-  // const [fileMeta, setFileMeta] = useState({
-  //   name: '',
-  //   description: '',
-  //   tags: [],
-  // });
-
-  // const postGistMutation = usePostGist();
-
-  const handleOnChange = (newValue: string | undefined) => {
-    if (newValue !== undefined) {
-      setCode(newValue);
-    }
-  };
-
-  // const handleFileMetaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = event.target;
-  //   setFileMeta((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const handleSubmit = async () => {
-  //   const extension = fileMeta?.name.split('.').pop();
-  //   const filename = fileMeta.name;
-
-  //   const data: GistCreatePayload = {
-  //     description: fileMeta.description,
-  //     files: {
-  //       [filename]: {
-  //         content: code,
-  //         language: extensionToLanguage[extension as string],
-  //         filename: filename,
-  //       },
-  //     },
-  //     public: true,
-  //   };
-  //   await postGistMutation.mutateAsync(data);
-  // };
-
+const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({
+  handleOnChange,
+  value,
+}) => {
   function setEditorTheme(monaco: any) {
     monaco.editor.defineTheme('onedark', {
       base: 'vs-dark',
@@ -85,7 +48,7 @@ const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({}) => {
       <Editor
         options={options}
         language="javascript"
-        value={code}
+        value={value}
         beforeMount={setEditorTheme}
         theme="onedark"
         defaultLanguage="javascript"
@@ -93,7 +56,7 @@ const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({}) => {
         onChange={handleOnChange}
         className={
           (cn(displayFontMapper.Default, defaultFontMapper.Default),
-          'relative min-h-[500px] w-full text-xl max-w-screen-lg border-stone-700 p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
+          'relative min-h-[500px] w-full text-xl max-w-screen-lg border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
         }
       />
     </div>

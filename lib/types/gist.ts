@@ -73,3 +73,16 @@ type History = {
   };
   url: string;
 };
+
+export type File = {
+  id: string;
+  filename: string;
+  content: string;
+  type: string;
+  language: string;
+};
+
+export type GistData = {
+  description: string;
+  files: File[];
+};
