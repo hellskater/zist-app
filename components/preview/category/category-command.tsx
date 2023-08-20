@@ -26,6 +26,7 @@ type SearchProps = {
   category: string;
   description: string;
   gistId: string;
+  isPublic?: boolean;
 };
 
 function CategoryCommand({
@@ -33,6 +34,7 @@ function CategoryCommand({
   category,
   description,
   gistId,
+  isPublic,
 }: SearchProps) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -68,14 +70,19 @@ function CategoryCommand({
   return (
     <>
       <div
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (isPublic) return;
+          setOpen(true);
+        }}
         className={`border px-3 h-[2.3rem] ${
           category ? 'border-green-500' : 'border-slate-700 border-2'
-        } rounded-lg flex items-center gap-2 cursor-pointer justify-center`}
+        } rounded-lg flex items-center gap-2 ${
+          !isPublic && 'cursor-pointer'
+        } justify-center`}
       >
         <AiOutlineFolderOpen />
         <p className="text-sm flex items-center gap-3 text-muted-foreground">
-          {category || 'Select a category'}
+          {category || (isPublic ? 'No Category' : 'Select category')}
         </p>
       </div>
 

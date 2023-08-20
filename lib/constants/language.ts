@@ -39,6 +39,7 @@ export const extensionToLanguage: {
   vue: 'vuejs',
   svelte: 'svelte',
   mjs: 'javascript',
+  cjs: 'javascript',
   coffee: 'coffeescript',
   sh: 'bash',
   bash: 'bash',
@@ -50,4 +51,7 @@ export const extensionToLanguage: {
   groovy: 'groovy',
   gd: 'godot',
   tex: 'latex',
+
+  // blockchains
+  sol: 'solidity',
 };

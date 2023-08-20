@@ -33,62 +33,74 @@ export const useGetAllGistsOfAuthenticatedUser = () => {
     () =>
       getAllGistsOfAuthenticatedUser((session as CustomSession)?.accessToken),
     {
-      enabled: !!session,
+      enabled: !!session && !!session,
     }
   );
 };
 
 // ---------------------------------- GET all gists of a user ----------------------------------
 
-const getAllGistsOfUser = async (username: string) => {
+const getAllGistsOfUser = async (username: string, accessToken: string) => {
   const response = await axios.get(
-    `https://api.github.com/users/${username}/gists`
+    `https://api.github.com/users/${username}/gists`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    }
   );
 
   return response.data as Gist[];
 };
 
 export const useGetAllGistsOfUser = (username: string) => {
-  return useQuery(['gists', username], () => getAllGistsOfUser(username), {
-    enabled: !!username,
-  });
-};
-
-// ---------------------------------- GET all public gists ----------------------------------
-
-const getAllPublicGists = async () => {
-  const response = await axios.get('https://api.github.com/gists/public');
-
-  return response.data as Gist[];
-};
-
-export const useGetAllPublicGists = () => {
-  return useQuery(['publicGists'], getAllPublicGists);
+  const { data: session } = useSession();
+  return useQuery(
+    ['gists', username],
+    () => getAllGistsOfUser(username, (session as CustomSession)?.accessToken),
+    {
+      enabled: !!username && !!session,
+    }
+  );
 };
 
 // ---------------------------------- GET gist by id ----------------------------------
 
-const getGistById = async (id: string) => {
-  const response = await axios.get(`https://api.github.com/gists/${id}`);
+const getGistById = async (id: string, accessToken: string) => {
+  const response = await axios.get(`https://api.github.com/gists/${id}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
 
   return response.data as Gist;
 };
 
 export const useGetGistById = (id: string) => {
-  return useQuery(['gist', id], () => getGistById(id), {
-    enabled: !!id,
-  });
+  const { data: session } = useSession();
+  return useQuery(
+    ['gist', id],
+    () => getGistById(id, (session as CustomSession).accessToken),
+    {
+      enabled: !!id && !!session,
+    }
+  );
 };
 
 // ---------------------------------- GET gist file ----------------------------------
 
-export const getGistFile = async (raw_url: string) => {
+export const getGistFile = async (raw_url: string | undefined) => {
+  if (!raw_url) {
+    return;
+  }
   const response = await axios.get(raw_url);
 
   return response.data;
 };
 
-export const useGetGistFile = (raw_url: string) => {
+export const useGetGistFile = (raw_url: string | undefined) => {
   return useQuery(['gistFile', raw_url], () => getGistFile(raw_url), {
     enabled: !!raw_url,
   });

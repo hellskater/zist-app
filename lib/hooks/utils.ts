@@ -1,7 +1,7 @@
 import { ZistConfig } from '../types/zist';
 
 const parseDescription = (description: string) => {
-  if (!description.includes('<-ZIST-CONFIG->')) {
+  if (!description?.includes('<-ZIST-CONFIG->')) {
     return {
       descriptionText: description,
       config: {} as ZistConfig,
