@@ -46,8 +46,6 @@ export default function EditorPreview({ fileUrl }: Props) {
     return <Skeleton className="max-h-40 h-40 w-full" />;
   }
 
-  console.log(readableContent);
-
   return (
     <div
       onClick={() => {

@@ -15,6 +15,7 @@ import { Button } from '../ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import FileSelector from '../filters/file-selector';
 import TabsContentWrapper from '../ui/tabs-content-wrapper';
+import PrivateFilter from '../filters/private-filter';
 
 import CreateCodeContainer from './CreateCodeContainer';
 import {
@@ -44,6 +45,7 @@ function CodeAndMarkdownWrapper() {
 
   const [gistData, setGistData] = useState<GistData>({
     description: '',
+    public: false,
     files: [defaultNewFile],
   });
 
@@ -110,17 +112,30 @@ function CodeAndMarkdownWrapper() {
     setButtonLabel('Saved');
   };
 
+  const _handleTypeToggle = (value: boolean) => {
+    setGistData({
+      ...gistData,
+      public: !value,
+    });
+  };
+
   return (
-    <div>
-      <Input
-        onChange={handleDescriptionChange}
-        value={gistData.description}
-        type="text"
-        name="description"
-        id="description"
-        placeholder="File Description..."
-        className="p-2 mt-2 mb-2 rounded-l"
-      />
+    <div className="w-[85%] ml-6">
+      <div className="flex items-center space-x-4">
+        <Input
+          onChange={handleDescriptionChange}
+          value={gistData.description}
+          type="text"
+          name="description"
+          id="description"
+          placeholder="File Description..."
+          className="w-full p-2 mt-2 mb-2 rounded-l"
+        />
+        <PrivateFilter
+          checked={!gistData.public}
+          onChange={_handleTypeToggle}
+        />
+      </div>
       <div className="flex items-center mt-2 mb-2 w-30 space-x-2 hover:border-red-500">
         <Input
           type="text"
