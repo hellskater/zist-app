@@ -1,11 +1,13 @@
+'use client';
+
 import React from 'react';
 
-import Tiptap from '@/components/tiptap';
+import CodeAndMarkdownWrapper from '@/components/editor/CodeAndMarkdownWrapper';
 
 const CreateZistPage = () => {
   return (
     <div>
-      <Tiptap />
+      <CodeAndMarkdownWrapper />
     </div>
   );
 };
