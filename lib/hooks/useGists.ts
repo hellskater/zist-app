@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
 import { CustomProfile, CustomSession } from '../auth';
-import { Gist, GistFileType } from '../types/gist';
+import { Gist, GistFileType, CreateFiles } from '../types/gist';
 import axios from '../axios';
 
 // ---------------------------------- GET all authenticated gists ----------------------------------
