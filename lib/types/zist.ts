@@ -11,6 +11,18 @@ export type Filters = {
   private?: boolean;
 };
 
+export type TabsView = {
+  [key: string]: {
+    key: string;
+    value: string;
+  };
+};
+
+export type Tab = {
+  key: string;
+  value: string;
+};
+
 export type Sorts = 'updated' | 'created';
 
 export type SortOrder = 'asc' | 'desc';

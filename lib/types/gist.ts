@@ -33,6 +33,14 @@ export type GistFileType = {
   size: number;
 };
 
+export type CreateFiles = {
+  [filename: string]: {
+    content: string;
+    language: string;
+    filename: string;
+  };
+};
+
 export type User = {
   login: string;
   id: number;
@@ -64,4 +72,18 @@ type History = {
     deletions: number;
   };
   url: string;
+};
+
+export type File = {
+  id: string;
+  filename: string;
+  content: string;
+  type: string;
+  language: string;
+};
+
+export type GistData = {
+  description: string;
+  public: boolean;
+  files: File[];
 };
