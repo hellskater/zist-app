@@ -4,6 +4,21 @@ import { GistData } from '@/lib/types/gist';
 import { Tab, TabsView } from '@/lib/types/zist';
 import { extensionToLanguage } from '@/lib/constants/language';
 
+export const randomFileNamesWithExtension = [
+  'random.js',
+  'random.ts',
+  'random.py',
+  'random.java',
+  'random.c',
+  'random.cpp',
+  'random.go',
+  'random.rb',
+  'random.php',
+  'random.html',
+  'random.css',
+  'random.md',
+];
+
 export const tabsValue: TabsView = {
   MARKDOWN: {
     key: 'text/markdown',
@@ -83,7 +98,10 @@ export const addNewFile = (
       ...gistData.files,
       {
         id: newFileId,
-        filename: '',
+        filename:
+          randomFileNamesWithExtension[
+            Math.floor(Math.random() * randomFileNamesWithExtension.length)
+          ],
         content: '',
         type: 'text/code',
         language: 'Code',

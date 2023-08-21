@@ -25,23 +25,28 @@ import {
   handleFileNameChange,
   handleFileTypeChange,
   handleSelectFile,
+  randomFileNamesWithExtension,
   removeFile,
   tabsValue,
 } from './editor_utils';
 
+const defaultNewFile = {
+  id: uuidv4(),
+  filename:
+    randomFileNamesWithExtension[
+      Math.floor(Math.random() * randomFileNamesWithExtension.length)
+    ],
+  content: '',
+  type: 'text/code',
+  language: 'Code',
+};
+
 function CodeAndMarkdownWrapper() {
   const [currentActiveTab, setCurrentActiveTab] = useState<Tab>(tabsValue.CODE);
-  const [buttonLabel, setButtonLabel] = useState('Save all');
 
   const [remountKey, setRemountKey] = useState(1);
 
-  const defaultNewFile = {
-    id: uuidv4(),
-    filename: '',
-    content: '',
-    type: 'text/code',
-    language: 'Code',
-  };
+  const { mutateAsync: postGist, isLoading: isPosting } = usePostGist();
 
   const [gistData, setGistData] = useState<GistData>({
     description: '',
@@ -103,13 +108,9 @@ function CodeAndMarkdownWrapper() {
     );
   };
 
-  const postGistMutation = usePostGist();
-
   const _handleSaveFiles = async () => {
-    setButtonLabel('Saving');
     const data = createPayload(gistData as GistData);
-    await postGistMutation.mutateAsync(data);
-    setButtonLabel('Saved');
+    await postGist(data);
   };
 
   const _handleTypeToggle = (value: boolean) => {
@@ -227,11 +228,9 @@ function CodeAndMarkdownWrapper() {
         </TabsContentWrapper>
       </Tabs>
       <div className="flex items-center justify-end pl-2">
-        <Button onClick={_handleSaveFiles}>
-          {buttonLabel}
-          {buttonLabel === 'Saving' && (
-            <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />
-          )}
+        <Button disabled={isPosting} onClick={_handleSaveFiles}>
+          {isPosting ? 'Saving' : 'Save'}
+          {isPosting && <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />}
         </Button>
       </div>
     </div>

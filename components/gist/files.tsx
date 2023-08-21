@@ -21,7 +21,7 @@ function Files({ selectedFile, setSelectedFile, files }: Props) {
       onValueChange={(value) => setSelectedFile(value as SortOrder)}
       value={selectedFile}
     >
-      <SelectTrigger className="w-[180px] h-10 capitalize">
+      <SelectTrigger className="w-[180px] h-10">
         <SelectValue placeholder="Select an order" />
       </SelectTrigger>
       <SelectContent>
