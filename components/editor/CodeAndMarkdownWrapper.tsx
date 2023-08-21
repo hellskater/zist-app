@@ -70,7 +70,7 @@ function CodeAndMarkdownWrapper() {
     });
   };
 
-  const _handleFileNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeFileName = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleFileNameChange(
       selectedFileId,
       e?.target.value,
@@ -79,26 +79,26 @@ function CodeAndMarkdownWrapper() {
     );
   };
 
-  const _handleFileContentChange = (value: string | undefined) => {
+  const handleChangeFileContent = (value: string | undefined) => {
     handleFileContentChange(selectedFileId, value || '', gistData, setGistData);
   };
 
-  const _handleFileContentChangeMD = (value: string) => {
+  const handleChangeFilecContentMD = (value: string) => {
     handleFileContentChange(selectedFileId, value, gistData, setGistData);
   };
 
-  const _handleAddNewFile = () => {
+  const handleAddNewFile = () => {
     addNewFile(gistData, setGistData, setSelectedFileId, setCurrentActiveTab);
   };
 
-  const _handleSelectFile = (value: string) => {
+  const handleFileSelect = (value: string) => {
     const selectedFileType = gistData.files.filter((item) => item.id === value);
     const type = selectedFileType[0].type;
     setRemountKey((previousValue) => previousValue + 1);
     handleSelectFile(value, type, setSelectedFileId, setCurrentActiveTab);
   };
 
-  const _handleDeleteFile = () => {
+  const handleDeleteFile = () => {
     removeFile(
       selectedFileId,
       gistData,
@@ -108,12 +108,12 @@ function CodeAndMarkdownWrapper() {
     );
   };
 
-  const _handleSaveFiles = async () => {
+  const handleSaveFiles = async () => {
     const data = createPayload(gistData as GistData);
     await postGist(data);
   };
 
-  const _handleTypeToggle = (value: boolean) => {
+  const handleTypeToggle = (value: boolean) => {
     setGistData({
       ...gistData,
       public: !value,
@@ -132,10 +132,7 @@ function CodeAndMarkdownWrapper() {
           placeholder="File Description..."
           className="w-full p-2 mt-2 mb-2 rounded-l"
         />
-        <PrivateFilter
-          checked={!gistData.public}
-          onChange={_handleTypeToggle}
-        />
+        <PrivateFilter checked={!gistData.public} onChange={handleTypeToggle} />
       </div>
       <div className="flex items-center mt-2 mb-2 w-30 space-x-2 hover:border-red-500">
         <Input
@@ -146,7 +143,7 @@ function CodeAndMarkdownWrapper() {
             gistData.files.find((file) => file.id === selectedFileId)
               ?.filename || ''
           }
-          onChange={(e) => _handleFileNameChange(e)}
+          onChange={(e) => handleChangeFileName(e)}
           placeholder="File Name"
           className="mt-2 mb-2 w-30"
         />
@@ -154,7 +151,7 @@ function CodeAndMarkdownWrapper() {
         {gistData.files.length > 1 && (
           <button
             title="delete this files"
-            onClick={_handleDeleteFile}
+            onClick={handleDeleteFile}
             className="flex items-center text-red-500"
           >
             <AiOutlineDelete />
@@ -162,7 +159,7 @@ function CodeAndMarkdownWrapper() {
         )}
       </div>
       <div className="flex items-center justify-between  mb-3">
-        <Button onClick={_handleAddNewFile}>Add file</Button>
+        <Button onClick={handleAddNewFile}>Add file</Button>
 
         <div className="flex items-center gap-8">
           <h3>
@@ -175,7 +172,7 @@ function CodeAndMarkdownWrapper() {
           <FileSelector
             gistData={gistData}
             selectedFileId={selectedFileId}
-            onChange={(value) => _handleSelectFile(value)}
+            onChange={(value) => handleFileSelect(value)}
           />
         </div>
       </div>
@@ -207,7 +204,7 @@ function CodeAndMarkdownWrapper() {
               gistData.files.find((file) => file.id === selectedFileId)
                 ?.content || ''
             }
-            onChange={(value: string) => _handleFileContentChangeMD(value)}
+            onChange={(value: string) => handleChangeFilecContentMD(value)}
           />
         </TabsContentWrapper>
 
@@ -222,13 +219,13 @@ function CodeAndMarkdownWrapper() {
                 ?.content || ''
             }
             handleOnChange={(value: string | undefined) =>
-              _handleFileContentChange(value)
+              handleChangeFileContent(value)
             }
           />
         </TabsContentWrapper>
       </Tabs>
       <div className="flex items-center justify-end pl-2">
-        <Button disabled={isPosting} onClick={_handleSaveFiles}>
+        <Button disabled={isPosting} onClick={handleSaveFiles}>
           {isPosting ? 'Saving' : 'Save'}
           {isPosting && <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />}
         </Button>
