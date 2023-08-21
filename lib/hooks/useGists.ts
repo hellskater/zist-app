@@ -4,12 +4,12 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 
 import { CustomProfile, CustomSession } from '../auth';
 import { Gist, GistFileType } from '../types/gist';
+import axios from '../axios';
 
 // ---------------------------------- GET all authenticated gists ----------------------------------
 
@@ -32,7 +32,7 @@ export const useGetAllGistsOfAuthenticatedUser = () => {
     () =>
       getAllGistsOfAuthenticatedUser((session as CustomSession)?.accessToken),
     {
-      enabled: !!session && !!session,
+      enabled: !!session,
     }
   );
 };
