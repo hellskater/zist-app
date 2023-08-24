@@ -7,7 +7,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 
 import { Tab } from '@/lib/types/zist';
 import { GistData } from '@/lib/types/gist';
-import { usePostGist } from '@/lib/hooks/useGists';
+import { usePatchGist, usePostGist } from '@/lib/hooks/useGists';
 
 import Tiptap from '../tiptap';
 import { Input } from '../ui/input';
@@ -20,7 +20,8 @@ import PrivateFilter from '../filters/private-filter';
 import CreateCodeContainer from './CreateCodeContainer';
 import {
   addNewFile,
-  createPayload,
+  getCreatePayload,
+  getUpdatePayload,
   handleFileContentChange,
   handleFileNameChange,
   handleFileTypeChange,
@@ -41,18 +42,36 @@ const defaultNewFile = {
   language: 'Code',
 };
 
-function CodeAndMarkdownWrapper() {
-  const [currentActiveTab, setCurrentActiveTab] = useState<Tab>(tabsValue.CODE);
+type CodeAndMarkdownWrapperProps = {
+  parentProps: GistData;
+  onEdit: boolean;
+};
+
+const CodeAndMarkdownWrapper: React.FC<CodeAndMarkdownWrapperProps> = ({
+  parentProps,
+  onEdit,
+}) => {
+  const isMarkdownType = onEdit && parentProps.files[0].language === 'Markdown';
+
+  const [currentActiveTab, setCurrentActiveTab] = useState<Tab>(
+    isMarkdownType ? tabsValue.MARKDOWN : tabsValue.CODE
+  );
 
   const [remountKey, setRemountKey] = useState(1);
 
   const { mutateAsync: postGist, isLoading: isPosting } = usePostGist();
+  const { mutateAsync: patchGist, isLoading: isPatching } = usePatchGist();
 
-  const [gistData, setGistData] = useState<GistData>({
-    description: '',
-    public: false,
-    files: [defaultNewFile],
-  });
+  const [gistData, setGistData] = useState<GistData>(
+    onEdit
+      ? parentProps
+      : {
+          id: '',
+          description: '',
+          public: false,
+          files: [defaultNewFile],
+        }
+  );
 
   const [selectedFileId, setSelectedFileId] = useState<string | null>(
     gistData.files.length > 0 ? gistData.files[0].id : null
@@ -109,8 +128,13 @@ function CodeAndMarkdownWrapper() {
   };
 
   const handleSaveFiles = async () => {
-    const data = createPayload(gistData as GistData);
-    await postGist(data);
+    if (onEdit) {
+      const updateData = getUpdatePayload(gistData as GistData);
+      await patchGist(updateData);
+    } else {
+      const createData = getCreatePayload(gistData as GistData);
+      await postGist(createData);
+    }
   };
 
   const handleTypeToggle = (value: boolean) => {
@@ -225,13 +249,24 @@ function CodeAndMarkdownWrapper() {
         </TabsContentWrapper>
       </Tabs>
       <div className="flex items-center justify-end pl-2">
-        <Button disabled={isPosting} onClick={handleSaveFiles}>
-          {isPosting ? 'Saving' : 'Save'}
-          {isPosting && <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />}
-        </Button>
+        {!onEdit ? (
+          <Button disabled={isPosting} onClick={handleSaveFiles}>
+            {isPosting ? 'Saving' : 'Save'}
+            {isPatching ? 'Updating' : 'Update'}
+            {isPosting ||
+              (isPatching && (
+                <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />
+              ))}
+          </Button>
+        ) : (
+          <Button disabled={isPatching} onClick={handleSaveFiles}>
+            {isPatching ? 'Updating' : 'Update'}
+            {isPatching && <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />}
+          </Button>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default CodeAndMarkdownWrapper;

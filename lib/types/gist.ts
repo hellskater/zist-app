@@ -83,7 +83,42 @@ export type File = {
 };
 
 export type GistData = {
+  id: string;
   description: string;
   public: boolean;
   files: File[];
+};
+
+type ReturnValueFilesType = {
+  [filename: string]: {
+    content: string;
+    language: string;
+    filename: string;
+    type: string;
+    size: number;
+    truncated: boolean;
+    raw_url: string;
+  };
+};
+
+export type SingleGistResponseData = {
+  comments: number;
+  comments_url: string;
+  commits_url: string;
+  created_at: string;
+  description: string;
+  files: ReturnValueFilesType;
+  forks: any[];
+  forks_url: string;
+  git_pull_url: string;
+  git_push_url: string;
+  history: any[];
+  html_url: string;
+  id: string;
+  owner: User;
+  public: boolean;
+  truncated: boolean;
+  updated_at: string;
+  url: string;
+  user: any;
 };
