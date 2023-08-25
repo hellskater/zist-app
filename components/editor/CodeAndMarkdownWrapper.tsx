@@ -8,6 +8,11 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { Tab } from '@/lib/types/zist';
 import { GistData } from '@/lib/types/gist';
 import { usePatchGist, usePostGist } from '@/lib/hooks/useGists';
+import {
+  getDescription,
+  getZistConfig,
+  updateDescription,
+} from '@/lib/hooks/utils';
 
 import Tiptap from '../tiptap';
 import { Input } from '../ui/input';
@@ -84,9 +89,11 @@ const CodeAndMarkdownWrapper = ({
   };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const zistConfig = getZistConfig(gistData.description);
+    const updatedDescription = updateDescription(e.target.value, zistConfig);
     setGistData({
       ...gistData,
-      description: e.target.value,
+      description: updatedDescription,
     });
   };
 
@@ -150,14 +157,19 @@ const CodeAndMarkdownWrapper = ({
       <div className="flex items-center space-x-4">
         <Input
           onChange={handleDescriptionChange}
-          value={gistData.description}
+          value={getDescription(gistData.description)}
           type="text"
           name="description"
           id="description"
           placeholder="File Description..."
           className="w-full p-2 mt-2 mb-2 rounded-l"
         />
-        <PrivateFilter checked={!gistData.public} onChange={handleTypeToggle} />
+        {!isEditing && (
+          <PrivateFilter
+            checked={!gistData.public}
+            onChange={handleTypeToggle}
+          />
+        )}
       </div>
       <div className="flex items-center mt-2 mb-2 w-30 space-x-2 hover:border-red-500">
         <Input

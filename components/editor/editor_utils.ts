@@ -190,7 +190,7 @@ export const constructPayload = (
 export const getUpdatePayload = (gistData: GistData) => {
   const payload = {
     description: gistData.description,
-    public: false,
+    public: gistData.public,
     id: gistData.id,
     files: gistData.files.reduce((result: Record<string, any>, file, index) => {
       result[file.filename || `file${index + 1}`] = {

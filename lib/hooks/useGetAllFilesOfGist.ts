@@ -21,10 +21,10 @@ const useGetAllFilesOfGist = () => {
             fileContent: fileData,
           };
         }
-        fileData = await queryClient.fetchQuery(
-          ['gistFile', files[filename].raw_url],
-          () => getGistFile(files[filename].raw_url)
-        );
+        fileData = await queryClient.fetchQuery({
+          queryKey: ['gistFile', files[filename].raw_url],
+          queryFn: () => getGistFile(files[filename].raw_url),
+        });
         return {
           filename,
           fileContent: fileData,

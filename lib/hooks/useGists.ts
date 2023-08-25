@@ -19,7 +19,7 @@ import axios from '../axios';
 
 // ---------------------------------- GET all authenticated gists ----------------------------------
 
-const getAllGistsOfAuthenticatedUser = async (accessToken: string) => {
+export const getAllGistsOfAuthenticatedUser = async (accessToken: string) => {
   const response = await axios.get('https://api.github.com/gists', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -33,14 +33,12 @@ const getAllGistsOfAuthenticatedUser = async (accessToken: string) => {
 export const useGetAllGistsOfAuthenticatedUser = () => {
   const { data: session } = useSession();
 
-  return useQuery(
-    ['gists', (session?.user as CustomProfile)?.id],
-    () =>
+  return useQuery({
+    queryKey: ['gists', (session?.user as CustomProfile)?.id],
+    queryFn: () =>
       getAllGistsOfAuthenticatedUser((session as CustomSession)?.accessToken),
-    {
-      enabled: !!session,
-    }
-  );
+    enabled: !!session,
+  });
 };
 
 // ---------------------------------- GET all gists of a user ----------------------------------
@@ -61,13 +59,12 @@ const getAllGistsOfUser = async (username: string, accessToken: string) => {
 
 export const useGetAllGistsOfUser = (username: string) => {
   const { data: session } = useSession();
-  return useQuery(
-    ['gists', username],
-    () => getAllGistsOfUser(username, (session as CustomSession)?.accessToken),
-    {
-      enabled: !!username && !!session,
-    }
-  );
+  return useQuery({
+    queryKey: ['gists', username],
+    queryFn: () =>
+      getAllGistsOfUser(username, (session as CustomSession)?.accessToken),
+    enabled: !!username && !!session,
+  });
 };
 
 // ---------------------------------- GET gist by id ----------------------------------
@@ -85,13 +82,11 @@ const getGistById = async (id: string, accessToken: string) => {
 
 export const useGetGistById = (id: string) => {
   const { data: session } = useSession();
-  return useQuery(
-    ['gist', id],
-    () => getGistById(id, (session as CustomSession).accessToken),
-    {
-      enabled: !!id && !!session,
-    }
-  );
+  return useQuery({
+    queryKey: ['gist', id],
+    queryFn: () => getGistById(id, (session as CustomSession).accessToken),
+    enabled: !!id && !!session,
+  });
 };
 
 // ---------------------------------- GET gist file ----------------------------------
@@ -106,8 +101,11 @@ export const getGistFile = async (raw_url: string | undefined) => {
 };
 
 export const useGetGistFile = (raw_url: string | undefined) => {
-  return useQuery(['gistFile', raw_url], () => getGistFile(raw_url), {
-    enabled: !!raw_url,
+  const { data: session } = useSession();
+  return useQuery({
+    queryKey: ['gistFile', raw_url],
+    queryFn: () => getGistFile(raw_url),
+    enabled: !!raw_url && !!session,
   });
 };
 
@@ -142,92 +140,83 @@ export const usePatchGist = () => {
 
   const history = useRouter();
 
-  return useMutation(
-    (data: GistUpdatePayload) =>
+  return useMutation({
+    mutationFn: (data: GistUpdatePayload) =>
       patchGist((session as CustomSession)?.accessToken, data),
-    {
-      onMutate: async (data) => {
-        await queryClient.cancelQueries([
-          'gists',
-          (session?.user as CustomProfile)?.id,
-        ]);
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({
+        queryKey: ['gists', (session?.user as CustomProfile)?.id],
+      });
 
-        await queryClient.cancelQueries(['gist', data.id]);
+      await queryClient.cancelQueries({
+        queryKey: ['gist', data.id],
+      });
 
-        const previousGists = queryClient.getQueryData([
-          'gists',
-          (session?.user as CustomProfile)?.id,
-        ]) as Gist[];
+      const previousGists = queryClient.getQueryData([
+        'gists',
+        (session?.user as CustomProfile)?.id,
+      ]) as Gist[];
 
-        const previousGist = queryClient.getQueryData([
-          'gist',
-          data.id,
-        ]) as Gist;
+      const previousGist = queryClient.getQueryData(['gist', data.id]) as Gist;
 
-        if (!previousGists) {
-          return;
-        }
+      if (!previousGists) {
+        return;
+      }
 
-        const filteredGists = previousGists.filter(
-          (gist) => gist.id !== data.id
-        );
+      const filteredGists = previousGists.filter((gist) => gist.id !== data.id);
 
-        queryClient.setQueryData(
-          ['gists', (session?.user as CustomProfile)?.id],
-          ((old: Gist[]) => {
-            return [
-              ...filteredGists,
-              {
-                ...old.find((gist) => gist.id === data.id),
-                ...data,
-              },
-            ] as Gist[];
-          }) as Updater<Gist[] | undefined, Gist[] | undefined>
-        );
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        ((old: Gist[]) => {
+          return [
+            ...filteredGists,
+            {
+              ...old.find((gist) => gist.id === data.id),
+              ...data,
+            },
+          ] as Gist[];
+        }) as Updater<Gist[] | undefined, Gist[] | undefined>
+      );
 
-        queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
-          return {
-            ...old,
-            ...data,
-          } as Gist;
-        }) as Updater<Gist | undefined, Gist | undefined>);
+      queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
+        return {
+          ...old,
+          ...data,
+        } as Gist;
+      }) as Updater<Gist | undefined, Gist | undefined>);
 
-        return { previousGists, previousGist };
-      },
+      return { previousGists, previousGist };
+    },
 
-      onError: (err, _, context) => {
-        queryClient.setQueryData(
-          ['gists', (session?.user as CustomProfile)?.id],
-          context?.previousGists
-        );
+    onError: (err, _, context) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        context?.previousGists
+      );
 
-        queryClient.setQueryData(
-          ['gist', context?.previousGist?.id],
-          context?.previousGist
-        );
-      },
+      queryClient.setQueryData(
+        ['gist', context?.previousGist?.id],
+        context?.previousGist
+      );
+    },
 
-      onSuccess: (data) => {
-        queryClient.setQueryData(
-          ['gists', (session?.user as CustomProfile)?.id],
-          ((old: Gist[]) => {
-            return [
-              ...old.filter((gist) => gist.id !== data.id),
-              data,
-            ] as Gist[];
-          }) as Updater<Gist[] | undefined, Gist[] | undefined>
-        );
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        ((old: Gist[]) => {
+          return [...old.filter((gist) => gist.id !== data.id), data] as Gist[];
+        }) as Updater<Gist[] | undefined, Gist[] | undefined>
+      );
 
-        queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
-          return {
-            ...old,
-            ...data,
-          } as Gist;
-        }) as Updater<Gist | undefined, Gist | undefined>);
-        history.push('/dashboard/my-zists');
-      },
-    }
-  );
+      queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
+        return {
+          ...old,
+          ...data,
+        } as Gist;
+      }) as Updater<Gist | undefined, Gist | undefined>);
+      history.push('/dashboard/my-zists');
+    },
+  });
 };
 
 // ---------------------------------- POST gist ----------------------------------
@@ -255,30 +244,28 @@ export const usePostGist = () => {
   const queryClient = useQueryClient();
   const history = useRouter();
 
-  return useMutation(
-    (data: GistCreatePayload) =>
+  return useMutation({
+    mutationFn: (data: GistCreatePayload) =>
       postGist((session as CustomSession)?.accessToken, data),
-    {
-      onError: () => {
-        toast.error('Failed to create gist');
-      },
+    onError: () => {
+      toast.error('Failed to create gist');
+    },
 
-      onSuccess: (data) => {
-        queryClient.setQueryData(
-          ['gists', (session?.user as CustomProfile)?.id],
-          ((old: Gist[] | undefined) => {
-            const newData = data as Gist;
-            if (old) {
-              return [...old, newData] as Gist[];
-            } else {
-              return [newData];
-            }
-          }) as Updater<Gist[] | undefined, Gist[] | undefined>
-        );
-        history.push('/dashboard/my-zists');
-      },
-    }
-  );
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        ((old: Gist[] | undefined) => {
+          const newData = data as Gist;
+          if (old) {
+            return [...old, newData] as Gist[];
+          } else {
+            return [newData];
+          }
+        }) as Updater<Gist[] | undefined, Gist[] | undefined>
+      );
+      history.push('/dashboard/my-zists');
+    },
+  });
 };
 
 // ---------------------------------- DELETE gist ----------------------------------
@@ -299,40 +286,38 @@ export const useDeleteGist = () => {
 
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (id: string) => deleteGist((session as CustomSession)?.accessToken, id),
-    {
-      onMutate: async (id) => {
-        await queryClient.cancelQueries([
-          'gists',
-          (session?.user as CustomProfile)?.id,
-        ]);
+  return useMutation({
+    mutationFn: (id: string) =>
+      deleteGist((session as CustomSession)?.accessToken, id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({
+        queryKey: ['gists', (session?.user as CustomProfile)?.id],
+      });
 
-        const previousGists = queryClient.getQueryData([
-          'gists',
-          (session?.user as CustomProfile)?.id,
-        ]) as Gist[];
+      const previousGists = queryClient.getQueryData([
+        'gists',
+        (session?.user as CustomProfile)?.id,
+      ]) as Gist[];
 
-        if (!previousGists) {
-          return;
-        }
+      if (!previousGists) {
+        return;
+      }
 
-        const filteredGists = previousGists.filter((gist) => gist.id !== id);
+      const filteredGists = previousGists.filter((gist) => gist.id !== id);
 
-        queryClient.setQueryData(
-          ['gists', (session?.user as CustomProfile)?.id],
-          filteredGists
-        );
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        filteredGists
+      );
 
-        return { previousGists };
-      },
+      return { previousGists };
+    },
 
-      onError: (err, _, context) => {
-        queryClient.setQueryData(
-          ['gists', (session?.user as CustomProfile)?.id],
-          context?.previousGists
-        );
-      },
-    }
-  );
+    onError: (err, _, context) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        context?.previousGists
+      );
+    },
+  });
 };

@@ -36,7 +36,7 @@ function EditGist({ params }: { params: { gistId: string } }) {
   }
 
   if (parentProps) {
-    return <CodeAndMarkdownWrapper parentProps={parentProps} onEdit />;
+    return <CodeAndMarkdownWrapper parentProps={parentProps} isEditing />;
   }
 }
 

@@ -23,11 +23,10 @@ const getGithubProfile = async (
 export const useGithubProfile = (username: string | undefined) => {
   const { data: session } = useSession();
 
-  return useQuery(
-    ['githubProfile', username],
-    () => getGithubProfile(username, (session as CustomSession)?.accessToken),
-    {
-      enabled: !!username && !!session,
-    }
-  );
+  return useQuery({
+    queryKey: ['githubProfile', username],
+    queryFn: () =>
+      getGithubProfile(username, (session as CustomSession)?.accessToken),
+    enabled: !!username && !!session,
+  });
 };

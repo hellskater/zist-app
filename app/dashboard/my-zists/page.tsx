@@ -26,7 +26,8 @@ const MyZistsPage = () => {
   const [sort, setSort] = useState<Sorts>('updated');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
-  const { data: gists, isLoading } = useGetAllGistsOfAuthenticatedUser();
+  const { data: gists, isPending: isLoading } =
+    useGetAllGistsOfAuthenticatedUser();
 
   const data = useMemo(
     () => getAllZistsData(gists, filter as Filters, sort, sortOrder),
@@ -114,7 +115,7 @@ const MyZistsPage = () => {
         </div>
       </section>
 
-      <section className="flex items-center gap-10 2xl:gap-14 justify-between mt-10 flex-wrap">
+      <section className="flex items-center gap-10 2xl:gap-14 mt-10 flex-wrap">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Skeleton

@@ -1,4 +1,9 @@
-import { NextAuthOptions, type Profile, type Session } from 'next-auth';
+import {
+  NextAuthOptions,
+  getServerSession,
+  type Profile,
+  type Session,
+} from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 
 export type CustomSession = {
@@ -46,3 +51,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+export function getServerSideUserSession() {
+  return getServerSession(authOptions) as Promise<CustomSession | null>;
+}
