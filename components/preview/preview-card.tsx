@@ -3,7 +3,7 @@ import { VscFiles, VscJson } from 'react-icons/vsc';
 import { SiYaml } from 'react-icons/si';
 import { FaCode } from 'react-icons/fa';
 import { useCallback, useState } from 'react';
-import { AiFillEdit, AiOutlineTags } from 'react-icons/ai';
+import { AiFillEdit, AiOutlineTags, AiTwotoneEdit } from 'react-icons/ai';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { useCompletion } from 'ai/react';
 import { toast } from 'react-hot-toast';
@@ -176,6 +176,20 @@ const PreviewCard = ({
           <FiEye className="absolute top-3 bg-black p-[0.4rem] rounded-md text-3xl right-3 text-white cursor-pointer hover:text-yellow-500 transition-all duration-300" />
         </Link>
       )}
+
+      <div
+        onClick={() => {
+          if (!isPublic) return;
+          router.push(`edit-zist/${gistId}`);
+        }}
+      >
+        {!isPublic && (
+          <Link href={`edit-zist/${gistId}`}>
+            <AiTwotoneEdit className="absolute top-12 bg-black p-[0.4rem] rounded-md text-3xl right-3 text-white cursor-pointer hover:text-yellow-500 transition-all duration-300" />
+          </Link>
+        )}
+      </div>
+
       <section>
         {gistContent ? (
           <CodePreview value={gistContent} language={language} />

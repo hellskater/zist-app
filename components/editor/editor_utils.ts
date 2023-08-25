@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { GistData } from '@/lib/types/gist';
+import { File, GistData, SingleGistResponseData } from '@/lib/types/gist';
 import { Tab, TabsView } from '@/lib/types/zist';
 import { extensionToLanguage } from '@/lib/constants/language';
+import { GistCreatePayload, GistUpdatePayload } from '@/lib/hooks/useGists';
 
 export const randomFileNamesWithExtension = [
   'random.js',
@@ -143,7 +144,7 @@ export const handleSelectFile = (
   );
 };
 
-export const createPayload = (gistData: GistData) => {
+export const getCreatePayload = (gistData: GistData) => {
   const payload = {
     description: gistData.description,
     public: false,
@@ -157,5 +158,49 @@ export const createPayload = (gistData: GistData) => {
     }, {}),
   };
 
-  return payload;
+  return payload as GistCreatePayload;
+};
+
+export const constructPayload = (
+  singleGistResponseData: SingleGistResponseData | undefined
+) => {
+  if (!singleGistResponseData) return null;
+
+  const files = [];
+  for (const [filename, fileData] of Object.entries(
+    singleGistResponseData.files
+  )) {
+    files.push({
+      id: uuidv4(),
+      filename: filename,
+      content: fileData.content,
+      type: fileData.type,
+      language: fileData.language,
+    });
+  }
+  const rv: GistData = {
+    id: singleGistResponseData.id,
+    description: singleGistResponseData.description,
+    public: singleGistResponseData.public,
+    files: files as Array<File>,
+  };
+  return rv;
+};
+
+export const getUpdatePayload = (gistData: GistData) => {
+  const payload = {
+    description: gistData.description,
+    public: false,
+    id: gistData.id,
+    files: gistData.files.reduce((result: Record<string, any>, file, index) => {
+      result[file.filename || `file${index + 1}`] = {
+        filename: file.filename || `file${index + 1}`,
+        content: file.content,
+        language: extensionToLanguage[file.language.split('.').pop() as string],
+      };
+      return result;
+    }, {}),
+  };
+
+  return payload as GistUpdatePayload;
 };

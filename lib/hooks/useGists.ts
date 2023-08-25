@@ -9,7 +9,12 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
 import { CustomProfile, CustomSession } from '../auth';
-import { Gist, GistFileType, CreateFiles } from '../types/gist';
+import {
+  Gist,
+  GistFileType,
+  CreateFiles,
+  SingleGistResponseData,
+} from '../types/gist';
 import axios from '../axios';
 
 // ---------------------------------- GET all authenticated gists ----------------------------------
@@ -75,7 +80,7 @@ const getGistById = async (id: string, accessToken: string) => {
     },
   });
 
-  return response.data as Gist;
+  return response.data as SingleGistResponseData;
 };
 
 export const useGetGistById = (id: string) => {
@@ -108,7 +113,7 @@ export const useGetGistFile = (raw_url: string | undefined) => {
 
 // ---------------------------------- PATCH gist ----------------------------------
 
-type GistUpdatePayload = {
+export type GistUpdatePayload = {
   id: string;
   description?: string;
   files?: GistFileType[];
@@ -134,6 +139,8 @@ export const usePatchGist = () => {
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
+
+  const history = useRouter();
 
   return useMutation(
     (data: GistUpdatePayload) =>
@@ -217,6 +224,7 @@ export const usePatchGist = () => {
             ...data,
           } as Gist;
         }) as Updater<Gist | undefined, Gist | undefined>);
+        history.push('/dashboard/my-zists');
       },
     }
   );
