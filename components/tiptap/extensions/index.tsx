@@ -13,7 +13,7 @@ import Highlight from '@tiptap/extension-highlight';
 import { InputRule } from '@tiptap/core';
 
 import SlashCommand from './slash-command';
-import SyntaxHighlight from './syntax-highlight';
+// import SyntaxHighlight from './syntax-highlight';
 
 export const TiptapExtensions = [
   StarterKit.configure({
@@ -127,5 +127,5 @@ export const TiptapExtensions = [
     html: false,
     transformCopiedText: true,
   }),
-  SyntaxHighlight,
+  // SyntaxHighlight,
 ];

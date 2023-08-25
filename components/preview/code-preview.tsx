@@ -13,7 +13,7 @@ const CodePreview = ({ value, language }: Props) => {
   const codeEl = useRef(null);
 
   useEffect(() => {
-    hljs.highlightBlock(codeEl.current as unknown as HTMLElement);
+    hljs.highlightElement(codeEl.current as unknown as HTMLElement);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, value]);

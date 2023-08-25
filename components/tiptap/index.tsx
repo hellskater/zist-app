@@ -60,7 +60,7 @@ const Editor: React.FC<EditorProps> = ({ content, onChange }) => {
       }}
       className={
         (cn(displayFontMapper.Default, defaultFontMapper.Default),
-        'relative min-h-[500px] w-full text-xl max-w-screen-lg border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
+        'relative min-h-[500px] w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
       }
     >
       {/* <div className="absolute right-5 top-5 mb-5 rounded-lg bg-stone-700 px-2 py-1 text-sm text-stone-200">

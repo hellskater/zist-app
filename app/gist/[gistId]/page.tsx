@@ -6,8 +6,8 @@ import { VscFiles } from 'react-icons/vsc';
 import { useGetGistById, useGetGistFile } from '@/lib/hooks/useGists';
 import { getDescription } from '@/lib/hooks/utils';
 import Files from '@/components/gist/files';
-import CodePreview from '@/components/gist/code-preview';
 import EditorPreview from '@/components/gist/editor-preview';
+import CodePreview from '@/components/gist/code-preview';
 
 const GistPage = ({ params }: { params: { gistId: string } }) => {
   const { data: gistData, isLoading: isGistLoading } = useGetGistById(
@@ -65,6 +65,7 @@ const GistPage = ({ params }: { params: { gistId: string } }) => {
       <section className="mt-10">
         {!isMarkdown ? (
           <CodePreview
+            key={selectedFile}
             fileName={selectedFile}
             fileUrl={gistData?.files[selectedFile]?.raw_url}
           />

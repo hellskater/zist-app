@@ -114,12 +114,12 @@ const MyZistsPage = () => {
         </div>
       </section>
 
-      <section className="flex items-center gap-10 mt-10 flex-wrap">
+      <section className="flex items-center gap-10 2xl:gap-14 justify-between mt-10 flex-wrap">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Skeleton
               key={i}
-              className="w-full lg:w-[calc(50%-2.5rem)] h-96 rounded-2xl"
+              className="w-full lg:w-[calc(50%-2.5rem)] 2xl:w-[30%] h-96 rounded-2xl"
             />
           ))
         ) : getGists().length > 0 ? (

@@ -22,7 +22,7 @@ const items = [
 ];
 const Sidebar = () => {
   return (
-    <div className="min-w-[13rem] w-full py-2 bg-[#151718] rounded-2xl sticky overflow-hidden top-28 h-fit">
+    <div className="min-w-[13rem] max-w-[15rem] w-full py-2 bg-[#151718] rounded-2xl sticky overflow-hidden top-28 h-fit">
       {items.map((item, index) => (
         <Link
           href={item.path}

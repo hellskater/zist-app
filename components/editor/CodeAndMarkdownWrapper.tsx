@@ -43,15 +43,16 @@ const defaultNewFile = {
 };
 
 type CodeAndMarkdownWrapperProps = {
-  parentProps: GistData;
-  onEdit: boolean;
+  parentProps?: GistData;
+  isEditing?: boolean;
 };
 
-const CodeAndMarkdownWrapper: React.FC<CodeAndMarkdownWrapperProps> = ({
+const CodeAndMarkdownWrapper = ({
   parentProps,
-  onEdit,
-}) => {
-  const isMarkdownType = onEdit && parentProps.files[0].language === 'Markdown';
+  isEditing,
+}: CodeAndMarkdownWrapperProps) => {
+  const isMarkdownType =
+    isEditing && parentProps?.files[0].language === 'Markdown';
 
   const [currentActiveTab, setCurrentActiveTab] = useState<Tab>(
     isMarkdownType ? tabsValue.MARKDOWN : tabsValue.CODE
@@ -63,8 +64,8 @@ const CodeAndMarkdownWrapper: React.FC<CodeAndMarkdownWrapperProps> = ({
   const { mutateAsync: patchGist, isLoading: isPatching } = usePatchGist();
 
   const [gistData, setGistData] = useState<GistData>(
-    onEdit
-      ? parentProps
+    isEditing
+      ? (parentProps as GistData)
       : {
           id: '',
           description: '',
@@ -128,7 +129,7 @@ const CodeAndMarkdownWrapper: React.FC<CodeAndMarkdownWrapperProps> = ({
   };
 
   const handleSaveFiles = async () => {
-    if (onEdit) {
+    if (isEditing) {
       const updateData = getUpdatePayload(gistData as GistData);
       await patchGist(updateData);
     } else {
@@ -249,14 +250,10 @@ const CodeAndMarkdownWrapper: React.FC<CodeAndMarkdownWrapperProps> = ({
         </TabsContentWrapper>
       </Tabs>
       <div className="flex items-center justify-end pl-2">
-        {!onEdit ? (
+        {!isEditing ? (
           <Button disabled={isPosting} onClick={handleSaveFiles}>
             {isPosting ? 'Saving' : 'Save'}
-            {isPatching ? 'Updating' : 'Update'}
-            {isPosting ||
-              (isPatching && (
-                <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />
-              ))}
+            {isPosting && <ReloadIcon className="ml-2 h-4 w-4 animate-spin" />}
           </Button>
         ) : (
           <Button disabled={isPatching} onClick={handleSaveFiles}>

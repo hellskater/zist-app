@@ -25,7 +25,8 @@ const CodePreview = ({ fileName, fileUrl }: Props) => {
   useEffect(() => {
     if (isDataLoading) return;
     if (!value) return;
-    hljs.highlightBlock(codeEl.current as unknown as HTMLElement);
+
+    hljs.highlightElement(codeEl.current as unknown as HTMLElement);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, value]);

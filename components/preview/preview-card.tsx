@@ -165,7 +165,7 @@ const PreviewCard = ({
         if (!isPublic) return;
         router.push(`/gist/${gistId}`);
       }}
-      className={`w-full relative lg:w-[calc(50%-1.25rem)] h-96 border-2 rounded-2xl overflow-hidden ${
+      className={`w-full relative lg:w-[calc(50%-1.25rem)] 2xl:w-[30%] h-96 border-2 rounded-2xl overflow-hidden ${
         isPublic
           ? 'cursor-pointer hover:-translate-y-2 transition-all duration-200'
           : ''

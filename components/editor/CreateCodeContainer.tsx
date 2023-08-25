@@ -21,10 +21,10 @@ const options = {
   },
 };
 
-const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({
+const CreateCodeContainer = ({
   handleOnChange,
   value,
-}) => {
+}: CreateCodeContainerProps) => {
   function setEditorTheme(monaco: any) {
     monaco.editor.defineTheme('onedark', {
       base: 'vs-dark',
@@ -56,7 +56,7 @@ const CreateCodeContainer: React.FC<CreateCodeContainerProps> = ({
         onChange={handleOnChange}
         className={
           (cn(displayFontMapper.Default, defaultFontMapper.Default),
-          'relative min-h-[500px] w-full text-xl max-w-screen-lg border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
+          'relative min-h-[500px] w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
         }
       />
     </div>
