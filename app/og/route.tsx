@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import axios from 'axios';
 
 import { Gist } from '@/lib/types/gist';
 
@@ -15,31 +14,31 @@ export async function GET(req: NextRequest) {
   let gistData: Gist | null = null;
   let gistFileData: string | null = null;
   try {
-    const res = await axios(`https://api.github.com/gists/${gistId}`);
-    gistData = res.data;
+    const res = await fetch(`https://api.github.com/gists/${gistId}`);
+    gistData = await res.json();
   } catch {
     // if rate limit exceeded, use personal token
-    const res = await axios(`https://api.github.com/gists/${gistId}`, {
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, {
       headers: {
         Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
       },
     });
-    gistData = res.data;
+    gistData = await res.json();
   }
 
   const gistUrl = gistData?.files[Object.keys(gistData?.files)[0]]?.raw_url;
 
   try {
-    const res = await axios(gistUrl as string);
-    gistFileData = res.data;
+    const res = await fetch(gistUrl as string);
+    gistFileData = await res.text();
   } catch {
     // if rate limit exceeded, use personal token
-    const res = await axios(gistUrl as string, {
+    const res = await fetch(gistUrl as string, {
       headers: {
         Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
       },
     });
-    gistFileData = res.data;
+    gistFileData = await res.text();
   }
 
   return new ImageResponse(<CodePreview value={gistFileData as string} />, {
