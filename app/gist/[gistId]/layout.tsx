@@ -14,15 +14,20 @@ export async function generateMetadata(
   const gistId = params.gistId;
   let gistData: Gist | null = null;
   try {
-    const res = await axios(`https://api.github.com/gists/${gistId}`);
+    const res = await axios(
+      `https://api.github.com/gists/${gistId}?timestamp=${Date.now()}`
+    );
     gistData = res.data;
   } catch {
     // if rate limit exceeded, use personal token
-    const res = await axios(`https://api.github.com/gists/${gistId}`, {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
-      },
-    });
+    const res = await axios(
+      `https://api.github.com/gists/${gistId}?timestamp=${Date.now()}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+        },
+      }
+    );
     gistData = res.data;
   }
 

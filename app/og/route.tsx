@@ -14,15 +14,20 @@ export async function GET(req: NextRequest) {
   let gistData: Gist | null = null;
   let gistFileData: string | null = null;
   try {
-    const res = await fetch(`https://api.github.com/gists/${gistId}`);
+    const res = await fetch(
+      `https://api.github.com/gists/${gistId}?timestamp=${Date.now()}`
+    );
     gistData = await res.json();
   } catch {
     // if rate limit exceeded, use personal token
-    const res = await fetch(`https://api.github.com/gists/${gistId}`, {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
-      },
-    });
+    const res = await fetch(
+      `https://api.github.com/gists/${gistId}?timestamp=${Date.now()}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+        },
+      }
+    );
     gistData = await res.json();
   }
 

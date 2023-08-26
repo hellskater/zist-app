@@ -107,16 +107,7 @@ const getAllGistsOfUser = async (
       data = response.data as Gist[];
     } catch {
       const response = await axios.get(
-        `https://api.github.com/users/${username}/gists`,
-        {
-          headers: {
-            Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
-            Accept: 'application/vnd.github.v3+json',
-          },
-          params: {
-            page,
-          },
-        }
+        `${window.location.origin}/api/userGists?username=${username}&page=${page}`
       );
 
       data = response.data as Gist[];
@@ -178,12 +169,9 @@ const getGistById = async (id: string, accessToken: string) => {
 
       data = response.data as SingleGistResponseData;
     } catch {
-      const response = await axios.get(`https://api.github.com/gists/${id}`, {
-        headers: {
-          Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
-          Accept: 'application/vnd.github.v3+json',
-        },
-      });
+      const response = await axios.get(
+        `${window.location.origin}/api/gist?id=${id}`
+      );
 
       data = response.data as SingleGistResponseData;
     }
@@ -197,8 +185,8 @@ export const useGetGistById = (id: string) => {
 
   return useQuery({
     queryKey: ['gist', id],
-    queryFn: () => getGistById(id, (session as CustomSession).accessToken),
-    enabled: true,
+    queryFn: () => getGistById(id, (session as CustomSession)?.accessToken),
+    enabled: !!id,
   });
 };
 
@@ -214,11 +202,10 @@ export const getGistFile = async (raw_url: string | undefined) => {
 };
 
 export const useGetGistFile = (raw_url: string | undefined) => {
-  const { data: session } = useSession();
   return useQuery({
     queryKey: ['gistFile', raw_url],
     queryFn: () => getGistFile(raw_url),
-    enabled: !!raw_url && !!session,
+    enabled: !!raw_url,
   });
 };
 

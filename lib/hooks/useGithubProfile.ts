@@ -32,13 +32,7 @@ const getGithubProfile = async (
       userData = response.data;
     } catch (error) {
       const response = await axiosInstance.get(
-        `https://api.github.com/users/${username}`,
-        {
-          headers: {
-            Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}}`,
-            Accept: 'application/vnd.github.v3+json',
-          },
-        }
+        `${window.location.origin}/api/profile?username=${username}`
       );
 
       userData = response.data;

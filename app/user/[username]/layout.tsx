@@ -12,15 +12,20 @@ export async function generateMetadata(
   const username = params.username;
   let githubProfile: User | null = null;
   try {
-    const res = await axios(`https://api.github.com/users/${username}`);
+    const res = await axios(
+      `https://api.github.com/users/${username}?timestamp=${Date.now()}`
+    );
     githubProfile = res.data;
   } catch {
     // if rate limit exceeded, use personal token
-    const res = await axios(`https://api.github.com/users/${username}`, {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
-      },
-    });
+    const res = await axios(
+      `https://api.github.com/users/${username}?timestamp=${Date.now()}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+        },
+      }
+    );
     githubProfile = res.data;
   }
 
