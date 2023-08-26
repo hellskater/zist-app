@@ -194,10 +194,11 @@ const getGistById = async (id: string, accessToken: string) => {
 
 export const useGetGistById = (id: string) => {
   const { data: session } = useSession();
+
   return useQuery({
     queryKey: ['gist', id],
     queryFn: () => getGistById(id, (session as CustomSession).accessToken),
-    enabled: !!id && !!session,
+    enabled: true,
   });
 };
 
