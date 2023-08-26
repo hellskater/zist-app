@@ -4,22 +4,23 @@ import UserProfile from '@/components/user/user-profile';
 
 export async function generateMetadata(
   { params }: { params: { username: string } },
-  parent?: ResolvingMetadata
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
   const username = params.username;
 
   // fetch data
-  const githubProfile = await fetch(
-    `https://api.github.com/users/${username}`
-  ).then((res) => res.json());
+  const githubProfile = await fetch(`https://api.github.com/users/${username}`)
+    .then((res) => res.json())
+    .catch(() => null);
 
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent)?.openGraph?.images || [];
+  const previousDescription = (await parent)?.description || '';
 
   return {
     title: `${githubProfile?.name || githubProfile?.login || 'User'} | Zist`,
-    description: githubProfile?.bio,
+    description: githubProfile?.bio || previousDescription,
     openGraph: {
       title: `${githubProfile?.name || githubProfile?.login || 'User'} | Zist`,
       description: githubProfile?.bio,
@@ -29,7 +30,7 @@ export async function generateMetadata(
     twitter: {
       card: 'summary_large_image',
       title: `${githubProfile?.name || githubProfile?.login || 'User'} | Zist`,
-      description: githubProfile?.bio,
+      description: githubProfile?.bio || previousDescription,
       images: [githubProfile?.avatar_url, ...previousImages],
     },
   };
