@@ -2,9 +2,11 @@ import { ImageResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import axios from 'axios';
 
-import CodePreview from '@/components/preview/code-preview';
 import { Gist } from '@/lib/types/gist';
-import { extensionToLanguage } from '@/lib/constants/language';
+
+import CodePreview from './preview';
+
+export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -40,25 +42,8 @@ export async function GET(req: NextRequest) {
     gistFileData = res.data;
   }
 
-  const extension = gistData?.files[Object.keys(gistData?.files)[0]]?.filename
-    .split('.')
-    .pop();
-
-  const language =
-    extensionToLanguage[extension as string] ||
-    gistData?.files[Object.keys(gistData?.files)[0]]?.language?.toLowerCase();
-
-  return new ImageResponse(
-    (
-      <CodePreview
-        language={language as string}
-        value={gistFileData as string}
-        og
-      />
-    ),
-    {
-      width: 1920,
-      height: 1080,
-    }
-  );
+  return new ImageResponse(<CodePreview value={gistFileData as string} />, {
+    width: 1920,
+    height: 1080,
+  });
 }
