@@ -1,7 +1,13 @@
 'use client';
 
+import { Metadata } from 'next';
+
 import UserProfile from '@/components/user/user-profile';
 import { useGetGistById } from '@/lib/hooks/useGists';
+
+export const metadata: Metadata = {
+  title: 'Gist | Zist',
+};
 
 export default function GistLayout({
   children,

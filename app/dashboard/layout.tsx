@@ -1,4 +1,10 @@
+import { Metadata } from 'next';
+
 import Sidebar from '@/components/dashboard/sidebar';
+
+export const metadata: Metadata = {
+  title: 'Dashboard | Zist',
+};
 
 export default async function DashboardLayout({
   children,

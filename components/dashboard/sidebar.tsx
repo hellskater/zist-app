@@ -1,6 +1,6 @@
 import { BsCodeSlash } from 'react-icons/bs';
 import { IoMdCreate } from 'react-icons/io';
-import { AiFillSetting } from 'react-icons/ai';
+// import { AiFillSetting } from 'react-icons/ai';
 import Link from 'next/link';
 
 const items = [
@@ -14,11 +14,11 @@ const items = [
     Icon: <IoMdCreate />,
     path: '/dashboard/create-zist',
   },
-  {
-    name: 'Settings',
-    Icon: <AiFillSetting />,
-    path: '/dashboard/settings',
-  },
+  // {
+  //   name: 'Settings',
+  //   Icon: <AiFillSetting />,
+  //   path: '/dashboard/settings',
+  // },
 ];
 const Sidebar = () => {
   return (

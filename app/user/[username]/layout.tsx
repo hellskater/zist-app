@@ -1,4 +1,10 @@
+import { Metadata } from 'next';
+
 import UserProfile from '@/components/user/user-profile';
+
+export const metadata: Metadata = {
+  title: 'User | Zist',
+};
 
 export default async function UserLayout({
   children,
