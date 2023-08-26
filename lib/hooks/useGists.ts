@@ -73,20 +73,57 @@ const getAllGistsOfUser = async (
   accessToken: string,
   page: number
 ) => {
-  const response = await axios.get(
-    `https://api.github.com/users/${username}/gists`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
-      params: {
-        page,
-      },
-    }
-  );
+  let data: Gist[] = [];
 
-  return response.data as Gist[];
+  if (accessToken) {
+    const response = await axios.get(
+      `https://api.github.com/users/${username}/gists`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        params: {
+          page,
+        },
+      }
+    );
+
+    data = response.data as Gist[];
+  } else {
+    try {
+      const response = await axios.get(
+        `https://api.github.com/users/${username}/gists`,
+        {
+          headers: {
+            Accept: 'application/vnd.github.v3+json',
+          },
+          params: {
+            page,
+          },
+        }
+      );
+
+      data = response.data as Gist[];
+    } catch {
+      const response = await axios.get(
+        `https://api.github.com/users/${username}/gists`,
+        {
+          headers: {
+            Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+            Accept: 'application/vnd.github.v3+json',
+          },
+          params: {
+            page,
+          },
+        }
+      );
+
+      data = response.data as Gist[];
+    }
+  }
+
+  return data;
 };
 
 export const useGetAllGistsOfUser = (username: string) => {
@@ -99,7 +136,7 @@ export const useGetAllGistsOfUser = (username: string) => {
         (session as CustomSession)?.accessToken,
         pageParam
       ),
-    enabled: !!username && !!session,
+    enabled: !!username,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
       if (lastPage.length === 0) {
@@ -120,14 +157,39 @@ export const useGetAllGistsOfUser = (username: string) => {
 // ---------------------------------- GET gist by id ----------------------------------
 
 const getGistById = async (id: string, accessToken: string) => {
-  const response = await axios.get(`https://api.github.com/gists/${id}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
+  let data: SingleGistResponseData;
 
-  return response.data as SingleGistResponseData;
+  if (accessToken) {
+    const response = await axios.get(`https://api.github.com/gists/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+
+    data = response.data as SingleGistResponseData;
+  } else {
+    try {
+      const response = await axios.get(`https://api.github.com/gists/${id}`, {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+        },
+      });
+
+      data = response.data as SingleGistResponseData;
+    } catch {
+      const response = await axios.get(`https://api.github.com/gists/${id}`, {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+      });
+
+      data = response.data as SingleGistResponseData;
+    }
+  }
+
+  return data;
 };
 
 export const useGetGistById = (id: string) => {
