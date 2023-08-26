@@ -77,9 +77,10 @@ const PreviewCard = ({
 
   const descriptionText = getDescription(description);
 
-  const language = data?.language?.toLowerCase();
-
   const extension = data?.filename.split('.').pop();
+
+  const language =
+    extensionToLanguage[extension as string] || data?.language?.toLowerCase();
 
   const languageIcon = extensionToLanguage[extension as string];
 

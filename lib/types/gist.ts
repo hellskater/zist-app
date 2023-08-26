@@ -42,6 +42,8 @@ export type CreateFiles = {
 };
 
 export type User = {
+  name: string;
+  bio: string;
   login: string;
   id: number;
   node_id: string;

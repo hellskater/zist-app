@@ -7,9 +7,10 @@ import 'highlight.js/styles/base16/seti-ui.css';
 type Props = {
   value: string;
   language: string;
+  og?: boolean;
 };
 
-const CodePreview = ({ value, language }: Props) => {
+const CodePreview = ({ value, language, og }: Props) => {
   const codeEl = useRef(null);
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const CodePreview = ({ value, language }: Props) => {
   const getValue = () => {
     if (typeof value === 'string') {
       // only include the first 1000 characters
+      if (og) return value.substring(0, 1000);
       return value.substring(0, 100);
     } else {
       return JSON.stringify(value, null, 2);
@@ -32,7 +34,7 @@ const CodePreview = ({ value, language }: Props) => {
       <code
         style={{ overflow: 'hidden' }}
         ref={codeEl}
-        className={`h-full ${language}`}
+        className={`h-full ${language} ${og && 'text-sm'}}`}
       >
         {getValue()}
       </code>

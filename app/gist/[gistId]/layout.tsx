@@ -1,25 +1,96 @@
-'use client';
+import axios from 'axios';
+import { ResolvingMetadata, Metadata } from 'next';
 
 import UserProfile from '@/components/user/user-profile';
-import { useGetGistById } from '@/lib/hooks/useGists';
+import { Gist } from '@/lib/types/gist';
+import { getServerSideUserSession } from '@/lib/auth';
+import { getDescription } from '@/lib/hooks/utils';
 
-export default function GistLayout({
+export async function generateMetadata(
+  { params }: { params: { gistId: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const gistId = params.gistId;
+  let gistData: Gist | null = null;
+  try {
+    const res = await axios(`https://api.github.com/gists/${gistId}`);
+    gistData = res.data;
+  } catch {
+    // if rate limit exceeded, use personal token
+    const res = await axios(`https://api.github.com/gists/${gistId}`, {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+      },
+    });
+    gistData = res.data;
+  }
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent)?.openGraph?.images || [];
+  const previousDescription = (await parent)?.description || '';
+
+  const fileName = Object.keys(gistData?.files || {})[0];
+  const description = getDescription(gistData?.description || '');
+
+  const ogImage =
+    `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/logo.png';
+
+  return {
+    title: `${fileName || 'File'} | Zist`,
+    description: description || previousDescription,
+    openGraph: {
+      title: `${fileName || 'File'} | Zist`,
+      description: description || previousDescription,
+      url: `https://zistapp.xyz/gist/${gistId}`,
+      images: [ogImage, ...previousImages],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${fileName || 'File'} | Zist`,
+      description: description || previousDescription,
+      images: [ogImage, ...previousImages],
+    },
+  };
+}
+
+export default async function GistLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
   params: { gistId: string };
 }) {
-  const { data: gistData, isPending: isGistLoading } = useGetGistById(
-    params?.gistId
-  );
+  const gistId = params.gistId;
 
-  if (!isGistLoading && !gistData) {
-    return (
-      <div>
-        <p>Gist not found</p>
-      </div>
-    );
+  let gistData: Gist | null = null;
+
+  const session = await getServerSideUserSession();
+
+  if (session) {
+    try {
+      const res = await axios(`https://api.github.com/gists/${gistId}`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      });
+      gistData = res.data;
+    } catch {}
+  } else {
+    try {
+      const res = await axios(`https://api.github.com/gists/${gistId}`);
+      gistData = res.data;
+    } catch {
+      try {
+        // if rate limit exceeded, use personal token
+        const res = await axios(`https://api.github.com/gists/${gistId}`, {
+          headers: {
+            Authorization: `token ${process.env.GITHUB_PERSONAL_TOKEN}`,
+          },
+        });
+        gistData = res.data;
+      } catch {}
+    }
   }
 
   return (
