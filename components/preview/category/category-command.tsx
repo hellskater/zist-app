@@ -42,7 +42,7 @@ function CategoryCommand({
 
   const { updateCategory } = useUpdateCategory();
 
-  const { deleteCategory, isLoading: isDeleting } = useDeleteCategory();
+  const { deleteCategory, isPending: isDeleting } = useDeleteCategory();
 
   const handleUpdateCategory = async (value: string) => {
     const categoryToUpdate = categories.find(
