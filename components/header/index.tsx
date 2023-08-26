@@ -30,7 +30,6 @@ const Header = () => {
     };
   }, []);
 
-  console.log(window.location.href);
   return (
     <div className="fixed">
       {!scrolledBelowThreshold && (
