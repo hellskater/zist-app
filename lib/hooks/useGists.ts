@@ -238,7 +238,7 @@ export const usePatchGist = () => {
 
   const queryClient = useQueryClient();
 
-  const history = useRouter();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: GistUpdatePayload) =>
@@ -257,13 +257,19 @@ export const usePatchGist = () => {
         (session?.user as CustomProfile)?.id,
       ]) as Gist[];
 
-      const previousGist = queryClient.getQueryData(['gist', data.id]) as Gist;
-
       if (!previousGists) {
         return;
       }
 
-      const filteredGists = previousGists.filter((gist) => gist.id !== data.id);
+      const previousGist = queryClient.getQueryData(['gist', data.id]) as Gist;
+
+      if (!previousGist) {
+        return;
+      }
+
+      const filteredGists = previousGists?.filter(
+        (gist) => gist.id !== data.id
+      );
 
       queryClient.setQueryData(
         ['gists', (session?.user as CustomProfile)?.id],
@@ -271,7 +277,7 @@ export const usePatchGist = () => {
           return [
             ...filteredGists,
             {
-              ...old.find((gist) => gist.id === data.id),
+              ...(old.find((gist) => gist.id === data.id) || {}),
               ...data,
             },
           ] as Gist[];
@@ -300,21 +306,15 @@ export const usePatchGist = () => {
       );
     },
 
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ['gists', (session?.user as CustomProfile)?.id],
-        ((old: Gist[]) => {
-          return [...old.filter((gist) => gist.id !== data.id), data] as Gist[];
-        }) as Updater<Gist[] | undefined, Gist[] | undefined>
-      );
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['gists', (session?.user as CustomProfile)?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['gistFile'],
+      });
 
-      queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
-        return {
-          ...old,
-          ...data,
-        } as Gist;
-      }) as Updater<Gist | undefined, Gist | undefined>);
-      history.push('/dashboard/my-zists');
+      router.push('/dashboard');
     },
   });
 };
@@ -342,7 +342,7 @@ export const usePostGist = () => {
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
-  const history = useRouter();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: GistCreatePayload) =>
@@ -351,19 +351,16 @@ export const usePostGist = () => {
       toast.error('Failed to create gist');
     },
 
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ['gists', (session?.user as CustomProfile)?.id],
-        ((old: Gist[] | undefined) => {
-          const newData = data as Gist;
-          if (old) {
-            return [...old, newData] as Gist[];
-          } else {
-            return [newData];
-          }
-        }) as Updater<Gist[] | undefined, Gist[] | undefined>
-      );
-      history.push('/dashboard/my-zists');
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['gists', (session?.user as CustomProfile)?.id],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['gistFile'],
+      });
+
+      router.push('/dashboard');
     },
   });
 };
@@ -403,7 +400,7 @@ export const useDeleteGist = () => {
         return;
       }
 
-      const filteredGists = previousGists.filter((gist) => gist.id !== id);
+      const filteredGists = previousGists?.filter((gist) => gist.id !== id);
 
       queryClient.setQueryData(
         ['gists', (session?.user as CustomProfile)?.id],
