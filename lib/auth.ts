@@ -16,7 +16,7 @@ export type CustomSession = {
 export type CustomProfile = {
   id: number;
 } & Profile;
-
+//
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 
