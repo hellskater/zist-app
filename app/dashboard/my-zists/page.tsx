@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 import PreviewCard from '@/components/preview/preview-card';
 import Search from '@/components/search';
@@ -26,19 +27,35 @@ const MyZistsPage = () => {
   const [sort, setSort] = useState<Sorts>('updated');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
-  const { data: gists, isPending: isLoading } =
-    useGetAllGistsOfAuthenticatedUser();
+  const { ref, inView } = useInView();
+
+  const {
+    data: gists,
+    isPending,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetAllGistsOfAuthenticatedUser();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
+
+  const allGists = gists?.pages?.reduce((acc, curr) => {
+    return [...acc, ...curr];
+  }, []);
 
   const data = useMemo(
-    () => getAllZistsData(gists, filter as Filters, sort, sortOrder),
-    [gists, filter, sort, sortOrder]
+    () => getAllZistsData(allGists, filter as Filters, sort, sortOrder),
+    [allGists, filter, sort, sortOrder]
   );
 
-  const categories = useMemo(() => getAllCategories(gists), [gists]);
+  const categories = useMemo(() => getAllCategories(allGists), [allGists]);
 
-  const allTags = useMemo(() => getAllTags(gists), [gists]);
+  const allTags = useMemo(() => getAllTags(allGists), [allGists]);
 
-  const languages = useMemo(() => getAllLanguages(gists), [gists]);
+  const languages = useMemo(() => getAllLanguages(allGists), [allGists]);
 
   const getGists = () => {
     return (
@@ -116,7 +133,7 @@ const MyZistsPage = () => {
       </section>
 
       <section className="flex items-center gap-10 2xl:gap-14 mt-10 flex-wrap">
-        {isLoading ? (
+        {isPending ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Skeleton
               key={i}
@@ -124,7 +141,17 @@ const MyZistsPage = () => {
             />
           ))
         ) : getGists().length > 0 ? (
-          getGists()
+          <>
+            {getGists()}
+            {isFetchingNextPage &&
+              Array.from({ length: 12 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="w-full lg:w-[calc(50%-2.5rem)] 2xl:w-[30%] h-96 rounded-2xl"
+                />
+              ))}
+            <div ref={ref} />
+          </>
         ) : (
           <p>No gists found</p>
         )}

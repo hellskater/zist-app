@@ -1,5 +1,7 @@
 import {
   Updater,
+  keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -19,11 +21,17 @@ import axios from '../axios';
 
 // ---------------------------------- GET all authenticated gists ----------------------------------
 
-export const getAllGistsOfAuthenticatedUser = async (accessToken: string) => {
+export const getAllGistsOfAuthenticatedUser = async (
+  accessToken: string,
+  page: number
+) => {
   const response = await axios.get('https://api.github.com/gists', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: 'application/vnd.github.v3+json',
+    },
+    params: {
+      page,
     },
   });
 
@@ -33,23 +41,47 @@ export const getAllGistsOfAuthenticatedUser = async (accessToken: string) => {
 export const useGetAllGistsOfAuthenticatedUser = () => {
   const { data: session } = useSession();
 
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['gists', (session?.user as CustomProfile)?.id],
-    queryFn: () =>
-      getAllGistsOfAuthenticatedUser((session as CustomSession)?.accessToken),
+    queryFn: ({ pageParam }) =>
+      getAllGistsOfAuthenticatedUser(
+        (session as CustomSession)?.accessToken,
+        pageParam
+      ),
     enabled: !!session,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      return lastPageParam + 1;
+    },
+    getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
+      if (firstPageParam <= 1) {
+        return undefined;
+      }
+      return firstPageParam - 1;
+    },
+    placeholderData: keepPreviousData,
   });
 };
 
 // ---------------------------------- GET all gists of a user ----------------------------------
 
-const getAllGistsOfUser = async (username: string, accessToken: string) => {
+const getAllGistsOfUser = async (
+  username: string,
+  accessToken: string,
+  page: number
+) => {
   const response = await axios.get(
     `https://api.github.com/users/${username}/gists`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         Accept: 'application/vnd.github.v3+json',
+      },
+      params: {
+        page,
       },
     }
   );
@@ -59,11 +91,29 @@ const getAllGistsOfUser = async (username: string, accessToken: string) => {
 
 export const useGetAllGistsOfUser = (username: string) => {
   const { data: session } = useSession();
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['gists', username],
-    queryFn: () =>
-      getAllGistsOfUser(username, (session as CustomSession)?.accessToken),
+    queryFn: ({ pageParam }) =>
+      getAllGistsOfUser(
+        username,
+        (session as CustomSession)?.accessToken,
+        pageParam
+      ),
     enabled: !!username && !!session,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      return lastPageParam + 1;
+    },
+    getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
+      if (firstPageParam <= 1) {
+        return undefined;
+      }
+      return firstPageParam - 1;
+    },
+    placeholderData: keepPreviousData,
   });
 };
 
