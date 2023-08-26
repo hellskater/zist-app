@@ -255,10 +255,11 @@ const PreviewCard = ({
       </section>
       <section className="px-5 mt-5 flex items-center gap-3">
         <div className="flex items-center gap-2 text-gray-400">
+          {numberOfFiles}
           <VscFiles />
-          <p>
+          {/* <p>
             {numberOfFiles} file{numberOfFiles > 1 ? 's' : ''}
-          </p>
+          </p> */}
           <p className="text-sm ml-2">Updated {dayjs(updated_at).fromNow()}</p>
         </div>
         {!isPublic && (

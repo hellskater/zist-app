@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
 import { ReloadIcon } from '@radix-ui/react-icons';
 
 import { Tab } from '@/lib/types/zist';
@@ -153,7 +153,7 @@ const CodeAndMarkdownWrapper = ({
   };
 
   return (
-    <div className="w-[85%] ml-6">
+    <div className="lg:ml-6 lg:w-[95%] w-[100%]">
       <div className="flex items-center space-x-4">
         <Input
           onChange={handleDescriptionChange}
@@ -196,7 +196,16 @@ const CodeAndMarkdownWrapper = ({
         )}
       </div>
       <div className="flex items-center justify-between  mb-3">
-        <Button onClick={handleAddNewFile}>Add file</Button>
+        <Button
+          className="cursor-pointer transition-all duration-300 ease-in-out rounded-l hidden md:block md:flex-initial"
+          onClick={handleAddNewFile}
+        >
+          Add file
+        </Button>
+        <AiOutlineFileAdd
+          onClick={handleAddNewFile}
+          className="w-6 h-6 cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#262525] rounded-l md:hidden"
+        />
 
         <div className="flex items-center gap-8">
           <h3>
@@ -215,7 +224,7 @@ const CodeAndMarkdownWrapper = ({
       </div>
 
       <Tabs defaultValue={tabsValue.CODE.value} value={currentActiveTab.value}>
-        <TabsList className="grid grid-cols-2 mb-2 w-[214px]">
+        <TabsList className="grid md:w-[214px] grid-cols-2 gap-2 mb-2 w-full">
           <TabsTrigger
             onClick={() => handleTabChange(tabsValue.MARKDOWN)}
             value={tabsValue.MARKDOWN.value}
@@ -261,7 +270,7 @@ const CodeAndMarkdownWrapper = ({
           />
         </TabsContentWrapper>
       </Tabs>
-      <div className="flex items-center justify-end pl-2">
+      <div className="flex items-center justify-end pl-2 pt-3">
         {!isEditing ? (
           <Button disabled={isPosting} onClick={handleSaveFiles}>
             {isPosting ? 'Saving' : 'Save'}

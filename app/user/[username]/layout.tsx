@@ -14,12 +14,12 @@ export default async function UserLayout({
   params: { username: string };
 }) {
   return (
-    <div className="p-5 pt-24 flex gap-12">
-      <section className="w-[20%]">
+    <div className="p-4 flex gap-10 sm:p-6 md:p-8 lg:p-12 xl:p-16 2xl:p-20">
+      <section className="hidden lg:block lg:flex-initial md:w-[20%] lg:w-[20%]">
         <UserProfile username={params?.username} />
       </section>
 
-      <main className="w-[80%]">{children}</main>
+      <main className="pt-24 flex-1 lg:w-[80%] w-full">{children}</main>
     </div>
   );
 }

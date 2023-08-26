@@ -21,6 +21,7 @@ import TagsFilter from '@/components/filters/tags-filter';
 import PrivateFilter from '@/components/filters/private-filter';
 import SortDropdown from '@/components/sorts/sort';
 import SortOrderDropdown from '@/components/sorts/sort-order';
+import ContentNotFound from '@/components/content-not-found';
 
 const MyZistsPage = () => {
   const [filter, setFilter] = useState<Filters>();
@@ -153,7 +154,15 @@ const MyZistsPage = () => {
             <div ref={ref} />
           </>
         ) : (
-          <p>No gists found</p>
+          <ContentNotFound
+            header="No Gist Found"
+            showImage
+            imageURL="/empty-space.png"
+            message="Looks like you dont have any gists yet. Let's create one."
+            showButton
+            buttonText="Create New Gist"
+            redirectURL="/create-gist"
+          />
         )}
       </section>
     </div>

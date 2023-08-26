@@ -20,6 +20,7 @@ import LanguageFilter from '@/components/filters/language-filter';
 import TagsFilter from '@/components/filters/tags-filter';
 import SortDropdown from '@/components/sorts/sort';
 import SortOrderDropdown from '@/components/sorts/sort-order';
+import ContentNotFound from '@/components/content-not-found';
 
 const UserPage = ({ params }: { params: { username: string } }) => {
   const [filter, setFilter] = useState<Filters>();
@@ -78,7 +79,7 @@ const UserPage = ({ params }: { params: { username: string } }) => {
   };
 
   return (
-    <div className="min-h-screen pr-10">
+    <div className="min-h-screen md:pr-2 sm:pr-0 xs:pr-0">
       <h1 className="text-4xl font-bold mt-2">Zists</h1>
       <section className="mt-10">
         <Search
@@ -151,7 +152,15 @@ const UserPage = ({ params }: { params: { username: string } }) => {
             <div ref={ref} />
           </>
         ) : (
-          <p>No gists found</p>
+          <ContentNotFound
+            header="No Gists Found"
+            showImage
+            imageURL="/empty-space.png"
+            message="Looks like you dont have any gists yet."
+            showButton={false}
+            buttonText="Create New Gist"
+            redirectURL="/create-gist"
+          />
         )}
       </section>
     </div>
