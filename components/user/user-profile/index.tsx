@@ -6,32 +6,21 @@ import { FiUsers } from 'react-icons/fi';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGithubProfile } from '@/lib/hooks/useGithubProfile';
-import { User } from '@/lib/types/gist';
 
 type Props = {
-  username?: string;
-  userData?: User;
-  isGistLoading?: boolean;
+  username: string;
 };
 
-export default function UserProfile({
-  username,
-  userData,
-  isGistLoading,
-}: Props) {
-  const { data, isLoading: isProfileLoading } = useGithubProfile(username);
+export default function UserProfile({ username }: Props) {
+  const { data: user, isPending: isLoading } = useGithubProfile(username);
 
-  const isLoading = username ? isProfileLoading : isGistLoading;
-
-  if (!userData && !isLoading && !data) {
+  if (!isLoading && !user) {
     return (
       <div className="w-full min-w-[13rem] text-white p-4">
         <p>User not found</p>
       </div>
     );
   }
-
-  const user = userData || data;
 
   return (
     <div className="w-full min-w-[13rem] text-white p-4 sticky top-28">

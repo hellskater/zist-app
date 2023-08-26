@@ -10,11 +10,11 @@ export default function GistLayout({
   children: React.ReactNode;
   params: { gistId: string };
 }) {
-  const { data: gistData, isLoading: isGistLoading } = useGetGistById(
+  const { data: gistData, isPending: isGistLoading } = useGetGistById(
     params?.gistId
   );
 
-  if (!gistData && !isGistLoading) {
+  if (!isGistLoading && !gistData) {
     return (
       <div>
         <p>Gist not found</p>
@@ -25,7 +25,7 @@ export default function GistLayout({
   return (
     <div className="p-5 pt-24 flex gap-12">
       <section className="w-[20%]">
-        <UserProfile userData={gistData?.owner} isGistLoading={isGistLoading} />
+        <UserProfile username={gistData?.owner?.login as string} />
       </section>
 
       <main className="w-[80%]">{children}</main>
