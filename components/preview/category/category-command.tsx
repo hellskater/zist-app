@@ -81,7 +81,7 @@ function CategoryCommand({
         } justify-center`}
       >
         <AiOutlineFolderOpen />
-        <p className="text-sm flex items-center gap-3 text-muted-foreground">
+        <p className="text-xs flex items-center gap-3 text-muted-foreground">
           {category || (isPublic ? 'No Category' : 'Select category')}
         </p>
       </div>
