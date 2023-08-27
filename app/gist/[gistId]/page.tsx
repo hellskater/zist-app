@@ -9,6 +9,7 @@ import Files from '@/components/gist/files';
 import EditorPreview from '@/components/gist/editor-preview';
 import CodePreview from '@/components/gist/code-preview';
 import ContentNotFound from '@/components/content-not-found';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const GistPage = ({ params }: { params: { gistId: string } }) => {
   const { data: gistData, isLoading: isGistLoading } = useGetGistById(
@@ -46,9 +47,15 @@ const GistPage = ({ params }: { params: { gistId: string } }) => {
 
   const isMarkdown = selectedFile?.endsWith('.md');
 
+  if (isGistLoading) {
+    return (
+      <Skeleton className="w-full lg:w-[calc(50%-2.5rem)] h-96 rounded-2xl" />
+    );
+  }
+
   return (
     <div className="min-h-screen pt-10 sm:pr-2 xs:pr-2">
-      <section className="flex flex-col sm:flex-row items-end justify-between">
+      <section className="flex flex-col sm:flex-row justify-between items-center">
         <div className="flex flex-col w-full items-start pb-8">
           <h1 className="text-2xl xs:text-sm sm:text-base md:text-xl lg:text-2xl font-bold text-white">
             Description
@@ -58,7 +65,7 @@ const GistPage = ({ params }: { params: { gistId: string } }) => {
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-5 w-[100%]">
+        <div className="flex items-center justify-end gap-5 w-[100%]">
           <div className="flex items-center gap-2 text-gray-200">
             {numberOfFiles} <VscFiles />
           </div>

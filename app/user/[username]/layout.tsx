@@ -64,7 +64,9 @@ export default async function UserLayout({
         <UserProfile username={params?.username} />
       </section>
 
-      <main className="pt-24 flex-1 lg:w-[80%] w-full">{children}</main>
+      <main className="pt-24 pb-8 flex-1 lg:w-[80%] w-full border-b-2 border-yellow-500">
+        {children}
+      </main>
     </div>
   );
 }
