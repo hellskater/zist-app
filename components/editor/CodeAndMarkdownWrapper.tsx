@@ -65,8 +65,8 @@ const CodeAndMarkdownWrapper = ({
 
   const [remountKey, setRemountKey] = useState(1);
 
-  const { mutateAsync: postGist, isLoading: isPosting } = usePostGist();
-  const { mutateAsync: patchGist, isLoading: isPatching } = usePatchGist();
+  const { mutateAsync: postGist, isPending: isPosting } = usePostGist();
+  const { mutateAsync: patchGist, isPending: isPatching } = usePatchGist();
 
   const [gistData, setGistData] = useState<GistData>(
     isEditing

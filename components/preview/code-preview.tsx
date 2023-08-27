@@ -13,6 +13,8 @@ const CodePreview = ({ value, language }: Props) => {
   const codeEl = useRef(null);
 
   useEffect(() => {
+    if (!value) return;
+
     hljs.highlightElement(codeEl.current as unknown as HTMLElement);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,7 +34,7 @@ const CodePreview = ({ value, language }: Props) => {
       <code
         style={{ overflow: 'hidden' }}
         ref={codeEl}
-        className={`h-full ${language}`}
+        className={`h-full ${language}}`}
       >
         {getValue()}
       </code>

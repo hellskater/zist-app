@@ -10,11 +10,13 @@ export type CustomSession = {
   accessToken: string;
   user: {
     id: number;
+    username: string;
   };
 } & Session;
 
 export type CustomProfile = {
   id: number;
+  login: string;
 } & Profile;
 //
 export const authOptions: NextAuthOptions = {
@@ -38,6 +40,7 @@ export const authOptions: NextAuthOptions = {
 
       if (profile) {
         token.id = (profile as CustomProfile).id;
+        token.username = (profile as CustomProfile).login;
       }
       return token;
     },
@@ -46,6 +49,7 @@ export const authOptions: NextAuthOptions = {
 
       (session as CustomSession).accessToken = token.accessToken as string;
       (session as CustomSession).user.id = token.id as number;
+      (session as CustomSession).user.username = token.username as string;
 
       return session as CustomSession;
     },

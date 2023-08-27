@@ -73,20 +73,48 @@ const getAllGistsOfUser = async (
   accessToken: string,
   page: number
 ) => {
-  const response = await axios.get(
-    `https://api.github.com/users/${username}/gists`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
-      params: {
-        page,
-      },
-    }
-  );
+  let data: Gist[] = [];
 
-  return response.data as Gist[];
+  if (accessToken) {
+    const response = await axios.get(
+      `https://api.github.com/users/${username}/gists`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+        params: {
+          page,
+        },
+      }
+    );
+
+    data = response.data as Gist[];
+  } else {
+    try {
+      const response = await axios.get(
+        `https://api.github.com/users/${username}/gists`,
+        {
+          headers: {
+            Accept: 'application/vnd.github.v3+json',
+          },
+          params: {
+            page,
+          },
+        }
+      );
+
+      data = response.data as Gist[];
+    } catch {
+      const response = await axios.get(
+        `${window.location.origin}/api/userGists?username=${username}&page=${page}`
+      );
+
+      data = response.data as Gist[];
+    }
+  }
+
+  return data;
 };
 
 export const useGetAllGistsOfUser = (username: string) => {
@@ -99,7 +127,7 @@ export const useGetAllGistsOfUser = (username: string) => {
         (session as CustomSession)?.accessToken,
         pageParam
       ),
-    enabled: !!username && !!session,
+    enabled: !!username,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
       if (lastPage.length === 0) {
@@ -120,22 +148,45 @@ export const useGetAllGistsOfUser = (username: string) => {
 // ---------------------------------- GET gist by id ----------------------------------
 
 const getGistById = async (id: string, accessToken: string) => {
-  const response = await axios.get(`https://api.github.com/gists/${id}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
+  let data: SingleGistResponseData;
 
-  return response.data as SingleGistResponseData;
+  if (accessToken) {
+    const response = await axios.get(`https://api.github.com/gists/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+
+    data = response.data as SingleGistResponseData;
+  } else {
+    try {
+      const response = await axios.get(`https://api.github.com/gists/${id}`, {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+        },
+      });
+
+      data = response.data as SingleGistResponseData;
+    } catch {
+      const response = await axios.get(
+        `${window.location.origin}/api/gist?id=${id}`
+      );
+
+      data = response.data as SingleGistResponseData;
+    }
+  }
+
+  return data;
 };
 
 export const useGetGistById = (id: string) => {
   const { data: session } = useSession();
+
   return useQuery({
     queryKey: ['gist', id],
-    queryFn: () => getGistById(id, (session as CustomSession).accessToken),
-    enabled: !!id && !!session,
+    queryFn: () => getGistById(id, (session as CustomSession)?.accessToken),
+    enabled: !!id,
   });
 };
 
@@ -151,11 +202,10 @@ export const getGistFile = async (raw_url: string | undefined) => {
 };
 
 export const useGetGistFile = (raw_url: string | undefined) => {
-  const { data: session } = useSession();
   return useQuery({
     queryKey: ['gistFile', raw_url],
     queryFn: () => getGistFile(raw_url),
-    enabled: !!raw_url && !!session,
+    enabled: !!raw_url,
   });
 };
 
@@ -188,7 +238,7 @@ export const usePatchGist = () => {
 
   const queryClient = useQueryClient();
 
-  const history = useRouter();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: GistUpdatePayload) =>
@@ -205,27 +255,40 @@ export const usePatchGist = () => {
       const previousGists = queryClient.getQueryData([
         'gists',
         (session?.user as CustomProfile)?.id,
-      ]) as Gist[];
-
-      const previousGist = queryClient.getQueryData(['gist', data.id]) as Gist;
+      ]) as {
+        pages: Gist[][];
+      };
 
       if (!previousGists) {
         return;
       }
 
-      const filteredGists = previousGists.filter((gist) => gist.id !== data.id);
+      const previousGist = queryClient.getQueryData(['gist', data.id]) as Gist;
+
+      if (!previousGist) {
+        return;
+      }
+
+      const updatedPages = previousGists.pages.map((page) =>
+        page.map((gist) => {
+          if (gist.id === data.id) {
+            return {
+              ...gist,
+              ...data,
+            } as Gist;
+          }
+          return gist;
+        })
+      );
 
       queryClient.setQueryData(
         ['gists', (session?.user as CustomProfile)?.id],
-        ((old: Gist[]) => {
-          return [
-            ...filteredGists,
-            {
-              ...old.find((gist) => gist.id === data.id),
-              ...data,
-            },
-          ] as Gist[];
-        }) as Updater<Gist[] | undefined, Gist[] | undefined>
+        ((old: { pages: Gist[][] }) => {
+          return {
+            ...old,
+            pages: updatedPages,
+          };
+        }) as Updater<{ pages: Gist[][] } | undefined, { pages: Gist[][] }>
       );
 
       queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
@@ -250,21 +313,15 @@ export const usePatchGist = () => {
       );
     },
 
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ['gists', (session?.user as CustomProfile)?.id],
-        ((old: Gist[]) => {
-          return [...old.filter((gist) => gist.id !== data.id), data] as Gist[];
-        }) as Updater<Gist[] | undefined, Gist[] | undefined>
-      );
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['gists', (session?.user as CustomProfile)?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['gistFile'],
+      });
 
-      queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
-        return {
-          ...old,
-          ...data,
-        } as Gist;
-      }) as Updater<Gist | undefined, Gist | undefined>);
-      history.push('/dashboard/my-zists');
+      router.push('/dashboard');
     },
   });
 };
@@ -292,7 +349,7 @@ export const usePostGist = () => {
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
-  const history = useRouter();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: GistCreatePayload) =>
@@ -301,19 +358,16 @@ export const usePostGist = () => {
       toast.error('Failed to create gist');
     },
 
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ['gists', (session?.user as CustomProfile)?.id],
-        ((old: Gist[] | undefined) => {
-          const newData = data as Gist;
-          if (old) {
-            return [...old, newData] as Gist[];
-          } else {
-            return [newData];
-          }
-        }) as Updater<Gist[] | undefined, Gist[] | undefined>
-      );
-      history.push('/dashboard/my-zists');
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['gists', (session?.user as CustomProfile)?.id],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['gistFile'],
+      });
+
+      router.push('/dashboard');
     },
   });
 };
@@ -347,13 +401,17 @@ export const useDeleteGist = () => {
       const previousGists = queryClient.getQueryData([
         'gists',
         (session?.user as CustomProfile)?.id,
-      ]) as Gist[];
+      ]) as {
+        pages: Gist[][];
+      };
 
       if (!previousGists) {
         return;
       }
 
-      const filteredGists = previousGists.filter((gist) => gist.id !== id);
+      const allGists = previousGists.pages.flat();
+
+      const filteredGists = allGists?.filter((gist) => gist.id !== id);
 
       queryClient.setQueryData(
         ['gists', (session?.user as CustomProfile)?.id],

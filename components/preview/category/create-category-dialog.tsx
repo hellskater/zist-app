@@ -32,7 +32,7 @@ function CreateCategoryDialog({
 }: Props) {
   const [input, setInput] = useState('');
 
-  const { createCategory, isLoading: isCategoryCreating } = useCreateCategory();
+  const { createCategory, isPending: isCategoryCreating } = useCreateCategory();
 
   const handleCreateCategory = async () => {
     if (!input) {

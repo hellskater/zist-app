@@ -32,7 +32,7 @@ function TagsDialog({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [input, setInput] = useState('');
 
-  const { updateTags, isLoading: isTagsUpdating } = useUpdateTags();
+  const { updateTags, isPending: isTagsUpdating } = useUpdateTags();
 
   const handleUpdateTags = async () => {
     await updateTags({

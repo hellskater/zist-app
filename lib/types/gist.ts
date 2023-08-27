@@ -42,6 +42,8 @@ export type CreateFiles = {
 };
 
 export type User = {
+  name: string;
+  bio: string;
   login: string;
   id: number;
   node_id: string;
@@ -60,6 +62,8 @@ export type User = {
   received_events_url: string;
   type: string;
   site_admin: boolean;
+  followers: number;
+  public_gists: number;
 };
 
 type History = {
