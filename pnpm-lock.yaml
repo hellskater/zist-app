@@ -176,6 +176,9 @@ dependencies:
   react-moveable:
     specifier: ^0.54.1
     version: 0.54.1
+  react-outclick:
+    specifier: ^0.0.4
+    version: 0.0.4(react-dom@18.2.0)(react@18.2.0)
   react-use-clipboard:
     specifier: ^1.0.9
     version: 1.0.9(react-dom@18.2.0)(react@18.2.0)
@@ -4955,6 +4958,17 @@ packages:
       overlap-area: 1.1.0
       react-css-styled: 1.1.9
       react-selecto: 1.26.0
+    dev: false
+
+  /react-outclick@0.0.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OL5s4sGWvC6ZwqfzsXfpn2axMyURe7cKX0qlCPHrun3O/x5dOTf7ATIyNuhB9LbK11m3yMFrjIGPx+oRb12Ijw==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: ^16.8.0
+      react-dom: ^16.8.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-remove-scroll-bar@2.3.4(@types/react@18.2.15)(react@18.2.0):

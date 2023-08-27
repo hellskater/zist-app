@@ -56,7 +56,7 @@ const CreateCodeContainer = ({
         onChange={handleOnChange}
         className={
           (cn(displayFontMapper.Default, defaultFontMapper.Default),
-          'relative min-h-[500px] w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
+          'relative min-h-[500px] w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] rounded-lg border sm:px-12 sm:shadow-lg')
         }
       />
     </div>

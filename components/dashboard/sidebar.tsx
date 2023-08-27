@@ -1,7 +1,12 @@
+'use client';
+
 import { BsCodeSlash } from 'react-icons/bs';
 import { IoMdCreate } from 'react-icons/io';
 // import { AiFillSetting } from 'react-icons/ai';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 const items = [
   {
@@ -21,8 +26,41 @@ const items = [
   // },
 ];
 const Sidebar = () => {
+  const [scrolledBelowThreshold, setScrolledBelowThreshold] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 180) {
+        setScrolledBelowThreshold(true);
+      } else {
+        setScrolledBelowThreshold(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const containerClasses = cn(
+    'min-w-[13rem]',
+    'max-w-[15rem]',
+    'w-full',
+    'py-2',
+    'bg-[#151718]',
+    'rounded-2xl',
+    'sticky',
+    'overflow-hidden',
+    'transition-all',
+    'duration-300',
+    { 'top-7': scrolledBelowThreshold, 'top-28': !scrolledBelowThreshold },
+    'h-fit',
+    'delay-100'
+  );
+
   return (
-    <div className="min-w-[13rem] max-w-[15rem] w-full py-2 bg-[#151718] rounded-2xl sticky overflow-hidden top-28 h-fit">
+    <div className={containerClasses}>
       {items.map((item, index) => (
         <Link
           href={item.path}
