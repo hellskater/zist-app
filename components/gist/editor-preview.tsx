@@ -53,7 +53,7 @@ export default function EditorPreview({ fileUrl }: Props) {
       }}
       className={
         (cn(displayFontMapper.Default, defaultFontMapper.Default),
-        'relative h-full text-white w-full text-xl bg-[#0a0a0a] p-12 px-8 sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:px-12 sm:shadow-lg')
+        'relative h-full text-white w-full text-xl bg-[#0a0a0a] p-12 px-8 sm:mb-[calc(20vh)] rounded-lg border sm:px-12 sm:shadow-lg')
       }
     >
       <div className="absolute top-3 right-3">
