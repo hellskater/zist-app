@@ -42,17 +42,17 @@ export async function generateMetadata(
     `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/logo.png';
 
   return {
-    title: `${fileName || 'File'} | Zist`,
+    title: `${description || fileName || 'File'} | Zist`,
     description: description || previousDescription,
     openGraph: {
-      title: `${fileName || 'File'} | Zist`,
+      title: `${description || fileName || 'File'} | Zist`,
       description: description || previousDescription,
       url: `https://zistapp.xyz/gist/${gistId}`,
       images: [ogImage, ...previousImages],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${fileName || 'File'} | Zist`,
+      title: `${description || fileName || 'File'} | Zist`,
       description: description || previousDescription,
       images: [ogImage, ...previousImages],
     },
