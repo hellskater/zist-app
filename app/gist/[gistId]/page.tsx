@@ -34,7 +34,7 @@ const GistPage = ({ params }: { params: { gistId: string } }) => {
           imageURL="/empty-space.png"
           message="Looks like the gist you are looking for is not there."
           showButton={false}
-          buttonText="false"
+          buttonText=""
           redirectURL=""
         />
       </div>
