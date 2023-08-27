@@ -78,7 +78,9 @@ const MyZistsPage = () => {
 
   return (
     <div className="min-h-screen">
-      <h1 className="text-4xl font-bold mt-2">My Zists</h1>
+      <h1 className="text-4xl xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mt-2">
+        My Zists
+      </h1>
       <section className="mt-10">
         <Search
           searchInput={filter?.search || ''}
@@ -87,7 +89,9 @@ const MyZistsPage = () => {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-bold">Filters</h2>
+        <h2 className="text-2xl xs:text-sm sm:text-base md:text-xl lg:text-2xl font-bold">
+          Filters
+        </h2>
         <div className="flex items-center gap-10 mt-5 flex-wrap">
           <CategoryFilter
             allCategories={categories}
@@ -110,7 +114,9 @@ const MyZistsPage = () => {
         </div>
 
         <div className={`mt-10 ${allTags.length === 0 ? 'hidden' : ''}`}>
-          <h2 className="text-2xl font-bold mb-5">Tags</h2>
+          <h2 className="text-2xl xs:text-sm sm:text-base md:text-xl lg:text-2xl font-bold mb-5">
+            Tags
+          </h2>
           <TagsFilter
             allTags={allTags}
             selectedTags={filter?.tags}
@@ -120,7 +126,9 @@ const MyZistsPage = () => {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-bold">Sorts</h2>
+        <h2 className="text-2xl xs:text-sm sm:text-base md:text-xl lg:text-2xl font-bold">
+          Sorts
+        </h2>
         <div className="flex items-center gap-10 mt-5 flex-wrap">
           <SortDropdown
             selectedSort={sort}

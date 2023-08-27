@@ -8,6 +8,7 @@ import { getDescription } from '@/lib/hooks/utils';
 import Files from '@/components/gist/files';
 import EditorPreview from '@/components/gist/editor-preview';
 import CodePreview from '@/components/gist/code-preview';
+import ContentNotFound from '@/components/content-not-found';
 
 const GistPage = ({ params }: { params: { gistId: string } }) => {
   const { data: gistData, isLoading: isGistLoading } = useGetGistById(
@@ -27,7 +28,15 @@ const GistPage = ({ params }: { params: { gistId: string } }) => {
   if (!gistData && !isGistLoading) {
     return (
       <div>
-        <p>Gist not found</p>
+        <ContentNotFound
+          header="Gist not found."
+          showImage
+          imageURL="/empty-space.png"
+          message="Looks like the gist you are looking for is not there."
+          showButton={false}
+          buttonText="false"
+          redirectURL=""
+        />
       </div>
     );
   }
@@ -38,21 +47,20 @@ const GistPage = ({ params }: { params: { gistId: string } }) => {
   const isMarkdown = selectedFile?.endsWith('.md');
 
   return (
-    <div className="min-h-screen pt-10 pr-10">
-      <section className="flex items-end justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Description</h1>
+    <div className="min-h-screen pt-10 sm:pr-2 xs:pr-2">
+      <section className="flex flex-col sm:flex-row items-end justify-between">
+        <div className="flex flex-col w-full items-start pb-8">
+          <h1 className="text-2xl xs:text-sm sm:text-base md:text-xl lg:text-2xl font-bold text-white">
+            Description
+          </h1>
           <p className="text-base w-full mt-3 text-gray-300">
             {description || 'No description'}
           </p>
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center justify-between gap-5 w-[100%]">
           <div className="flex items-center gap-2 text-gray-200">
-            <VscFiles />
-            <p>
-              {numberOfFiles} file{numberOfFiles > 1 ? 's' : ''}
-            </p>
+            {numberOfFiles} <VscFiles />
           </div>
           <Files
             files={Object.keys(gistData?.files || {})}

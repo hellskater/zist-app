@@ -5,12 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { RiMenu4Line } from 'react-icons/ri';
 import OutClick from 'react-outclick';
+import { useSession } from 'next-auth/react';
 
 import Sidebar from '../dashboard/sidebar';
 
 import ProfileMenu from './profile-menu';
 
 const Header = () => {
+  const { data: session } = useSession();
+
   const [showSideBar, setShowSideBar] = useState(false);
 
   const [scrolledBelowThreshold, setScrolledBelowThreshold] = useState(false);
@@ -34,13 +37,14 @@ const Header = () => {
     <div className="fixed">
       {!scrolledBelowThreshold && (
         <>
-          <header className="p-4 px-10 fixed top-0 bg-[#0a0a0a] z-50 w-full bg-opacity-80 flex justify-between items-center">
-            {' '}
+          <header className="p-4 pl-6 pr-6 sm:pl-10 xs:pl-3 fixed top-0 bg-[#0a0a0a] z-50 w-full bg-opacity-80 flex justify-between items-center">
             <div className="flex items-center  ">
-              <RiMenu4Line
-                onClick={() => setShowSideBar(!showSideBar)}
-                className="w-12 h-12 mr-2 cursor-pointer transition-all duration-500 ease-in-out delay-500 hover:bg-[#262525] hover:text-yellow-500 rounded-l lg:hidden"
-              />
+              {session && (
+                <RiMenu4Line
+                  onClick={() => setShowSideBar(!showSideBar)}
+                  className="w-12 h-12 mr-2 cursor-pointer transition-all duration-100 ease-in-out delay-100 hover:bg-[#262525] hover:text-yellow-500 rounded-l lg:hidden"
+                />
+              )}
               <Link href="/">
                 <section className="flex items-center gap-2 transition-all duration-500 ease-in-out delay-500">
                   <Image
@@ -50,7 +54,7 @@ const Header = () => {
                     height={60}
                     className="object-contain"
                   />
-                  <h1 className="text-gray-300 text-2xl tracking-widest font-bold">
+                  <h1 className="hidden sm:block text-gray-300 text-2xl tracking-widest font-bold ">
                     ZIST
                   </h1>
                 </section>
