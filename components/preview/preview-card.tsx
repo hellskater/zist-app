@@ -77,7 +77,7 @@ const PreviewCard = ({
 
   const remainingCredits = dbUser?.maxallowed
     ? dbUser?.maxallowed - dbUser?.autotagcount
-    : 0;
+    : 5;
 
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
 

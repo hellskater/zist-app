@@ -7,7 +7,7 @@ const AutotagCount = () => {
 
   const remainingCredits = dbUser?.maxallowed
     ? dbUser?.maxallowed - dbUser?.autotagcount
-    : 0;
+    : 5;
 
   const getTextColor = () => {
     if (remainingCredits > 0) {
