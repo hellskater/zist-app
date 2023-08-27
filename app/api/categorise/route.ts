@@ -1,5 +1,9 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { Configuration, OpenAIApi } from 'openai-edge';
+import { revalidatePath } from 'next/cache';
+
+import { getServerSideUserSession } from '@/lib/auth';
+import { getUser, insertUser, updateUser } from '@/lib/queries';
 
 // export const runtime = 'edge';
 
@@ -11,6 +15,19 @@ const openai = new OpenAIApi(apiConfig);
 
 export async function POST(req: Request) {
   const { prompt } = await req.json();
+
+  const session = await getServerSideUserSession();
+
+  const dbUser = await getUser(session?.user?.username as string);
+
+  if (dbUser && dbUser.autotagcount >= (dbUser.maxallowed as number)) {
+    return new Response(
+      'You have reached your maximum allowed autotag count.',
+      {
+        status: 429,
+      }
+    );
+  }
 
   const response = await openai.createChatCompletion({
     stream: true,
@@ -42,6 +59,19 @@ Remember to consider the description, context of the content and the purpose it 
     frequency_penalty: 0,
     presence_penalty: 0,
   });
+
+  if (response) {
+    if (dbUser) {
+      await updateUser(
+        session?.user?.username as string,
+        dbUser.autotagcount + 1
+      );
+      revalidatePath('/');
+    } else {
+      await insertUser(session?.user?.username as string, 1);
+      revalidatePath('/');
+    }
+  }
 
   const stream = OpenAIStream(response);
 

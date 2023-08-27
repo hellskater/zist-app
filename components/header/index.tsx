@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import ProfileMenu from './profile-menu';
 
-const Header = () => {
+const Header = async () => {
   return (
     <header className="py-4 px-14 fixed top-0 bg-[#0a0a0a] z-50 w-full bg-opacity-80 flex justify-between items-center">
       <Link href="/">
@@ -20,6 +20,7 @@ const Header = () => {
           </h1>
         </section>
       </Link>
+
       <ProfileMenu />
     </header>
   );

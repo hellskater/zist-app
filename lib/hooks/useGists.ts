@@ -255,7 +255,9 @@ export const usePatchGist = () => {
       const previousGists = queryClient.getQueryData([
         'gists',
         (session?.user as CustomProfile)?.id,
-      ]) as Gist[];
+      ]) as {
+        pages: Gist[][];
+      };
 
       if (!previousGists) {
         return;
@@ -267,21 +269,26 @@ export const usePatchGist = () => {
         return;
       }
 
-      const filteredGists = previousGists?.filter(
-        (gist) => gist.id !== data.id
+      const updatedPages = previousGists.pages.map((page) =>
+        page.map((gist) => {
+          if (gist.id === data.id) {
+            return {
+              ...gist,
+              ...data,
+            } as Gist;
+          }
+          return gist;
+        })
       );
 
       queryClient.setQueryData(
         ['gists', (session?.user as CustomProfile)?.id],
-        ((old: Gist[]) => {
-          return [
-            ...filteredGists,
-            {
-              ...(old.find((gist) => gist.id === data.id) || {}),
-              ...data,
-            },
-          ] as Gist[];
-        }) as Updater<Gist[] | undefined, Gist[] | undefined>
+        ((old: { pages: Gist[][] }) => {
+          return {
+            ...old,
+            pages: updatedPages,
+          };
+        }) as Updater<{ pages: Gist[][] } | undefined, { pages: Gist[][] }>
       );
 
       queryClient.setQueryData(['gist', data.id], ((old: Gist) => {
@@ -394,13 +401,17 @@ export const useDeleteGist = () => {
       const previousGists = queryClient.getQueryData([
         'gists',
         (session?.user as CustomProfile)?.id,
-      ]) as Gist[];
+      ]) as {
+        pages: Gist[][];
+      };
 
       if (!previousGists) {
         return;
       }
 
-      const filteredGists = previousGists?.filter((gist) => gist.id !== id);
+      const allGists = previousGists.pages.flat();
+
+      const filteredGists = allGists?.filter((gist) => gist.id !== id);
 
       queryClient.setQueryData(
         ['gists', (session?.user as CustomProfile)?.id],

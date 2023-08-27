@@ -7,30 +7,28 @@ import { AiFillEdit, AiOutlineTags, AiTwotoneEdit } from 'react-icons/ai';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { useCompletion } from 'ai/react';
 import { toast } from 'react-hot-toast';
-import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import Link from 'next/link';
 import { FiEye } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useGetGistFile } from '@/lib/hooks/useGists';
 import { Skeleton } from '@/components/ui/skeleton';
 import { extensionToLanguage } from '@/lib/constants/language';
-import { Files, Gist } from '@/lib/types/gist';
+import { Files } from '@/lib/types/gist';
 import { getDescription, getZistConfig } from '@/lib/hooks/utils';
 import { truncateString } from '@/lib/utils';
 import useGetAllFilesOfGist from '@/lib/hooks/useGetAllFilesOfGist';
-import {
-  useCreateCategory,
-  useUpdateCategory,
-} from '@/lib/hooks/useCategories';
-import { useUpdateTags } from '@/lib/hooks/useTags';
+import { useCategoryAndTags } from '@/lib/hooks/useCategoryAndTags';
+import { useGetDbUser } from '@/lib/hooks/useDbuser';
 
 import CodePreview from './code-preview';
 import CategoryCommand from './category/category-command';
 import TagsDialog from './tags/tags-dialog';
+import { ContactForm } from './contact-form';
 
 type PreviewCardProps = {
   files: Files;
@@ -61,17 +59,27 @@ const PreviewCard = ({
 
   const queryClient = useQueryClient();
 
-  const { updateCategory } = useUpdateCategory();
-
-  const { createCategory } = useCreateCategory();
-
-  const { updateTags } = useUpdateTags();
+  const { updateCategoryAndTags } = useCategoryAndTags();
 
   const { complete, isLoading: isAutoTagging } = useCompletion({
     api: '/api/categorise',
+    onResponse: async () => {
+      queryClient.invalidateQueries({ queryKey: ['dbUser'] });
+    },
+    onError: (e) => {
+      toast.error(e.message);
+    },
   });
 
   const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
+
+  const { data: dbUser } = useGetDbUser();
+
+  const remainingCredits = dbUser?.maxallowed
+    ? dbUser?.maxallowed - dbUser?.autotagcount
+    : 0;
+
+  const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
 
   const { category, tags = [] } = getZistConfig(description);
 
@@ -103,6 +111,11 @@ const PreviewCard = ({
   };
 
   const handleAutoTag = useCallback(async () => {
+    if (remainingCredits === 0) {
+      setIsContactDialogOpen(true);
+      return;
+    }
+
     const filesData = await getFilesData(files);
 
     const payload = {
@@ -115,43 +128,15 @@ const PreviewCard = ({
     const response = await complete(JSON.stringify(payload));
 
     if (!response) {
-      toast.error('Failed to auto tag!');
       return;
     }
 
     try {
       const parsedResponse = JSON.parse(response);
 
-      // category
-      if (parsedResponse?.category) {
-        if (categories.includes(parsedResponse?.category)) {
-          await updateCategory({
-            category: parsedResponse?.category,
-            description,
-            gistId,
-          });
-        } else {
-          await createCategory({
-            category: parsedResponse?.category,
-            description,
-            gistId,
-          });
-        }
-      }
+      const { category, tags } = parsedResponse;
 
-      // tags
-
-      if (parsedResponse?.tags) {
-        const newGistData = (await queryClient.getQueryData([
-          'gist',
-          gistId,
-        ])) as Gist;
-        await updateTags({
-          gistId,
-          description: newGistData?.description || description,
-          tags: parsedResponse?.tags,
-        });
-      }
+      await updateCategoryAndTags({ gistId, category, tags, description });
 
       toast.success('Auto tag successful!');
     } catch {
@@ -273,6 +258,10 @@ const PreviewCard = ({
               }`}
             />
             <p>Auto Tag</p>
+            <ContactForm
+              isOpen={isContactDialogOpen}
+              setIsOpen={setIsContactDialogOpen}
+            />
           </div>
         )}
       </section>
