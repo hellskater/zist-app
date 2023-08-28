@@ -15,20 +15,20 @@ function Hero() {
   return (
     <section className="min-h-screen lg:min-h-0 w-full">
       <div className="flex h-screen justify-center items-center w-full lg:w-2/3 mx-auto">
-        <div className="flex w-1/2 flex-col gap-10">
-          <div className="flex w-full items-center justify-center gap-4 lg:justify-start">
+        <div className="flex lg:w-1/2 flex-col gap-10">
+          <div className="flex w-full items-center gap-4 pl-4 lg:pl-0">
             <Image
               src="/logo.png"
               alt="Zist Logo"
-              width={200}
-              height={200}
+              width={isMobile ? 100 : 200}
+              height={isMobile ? 100 : 200}
               className="object-contain"
             />
-            <h1 className="bg-gradient-to-r from-orange-500 bg-clip-text text-6xl font-extrabold text-transparent to-white sm:text-8xl sm:leading-[5.5rem]">
+            <h1 className="bg-gradient-to-r from-orange-500 bg-clip-text text-8xl font-extrabold text-transparent to-white">
               zist
             </h1>
           </div>
-          <p className="max-w-[55ch] bg-transparent px-8 text-center font-medium leading-8 text-gray-300 lg:px-0 lg:text-left">
+          <p className="lg:max-w-[55ch] w-full bg-transparent px-8 text-sm lg:text-lg font-medium leading-6 lg:leading-8 text-gray-300 lg:px-0">
             <Balancer>
               Optimize your coding workflow with Zist. Save, organize, and
               access your code snippets effortlessly. Zist syncs with your
@@ -38,7 +38,7 @@ function Hero() {
           </p>
 
           <Button
-            className="flex items-center w-fit gap-2 rounded-xl border-2 px-8 h-10 border-gray-200 text-white"
+            className="flex ml-8 lg:ml-0 items-center w-fit gap-2 rounded-xl border-2 px-8 h-10 border-gray-200 text-white"
             variant="outline"
           >
             Get Started
