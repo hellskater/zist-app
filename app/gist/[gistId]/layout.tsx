@@ -39,7 +39,7 @@ export async function generateMetadata(
   const description = getDescription(gistData?.description || '');
 
   const ogImage =
-    `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/logo.png';
+    `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/og.png';
 
   return {
     title: `${description || fileName || 'File'} | Zist`,
