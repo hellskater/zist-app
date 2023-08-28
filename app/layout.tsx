@@ -58,6 +58,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: 'https://zistapp.xyz/og.png',
+        width: 1200,
+        height: 630,
       },
     ],
   },
@@ -66,7 +68,13 @@ export const metadata: Metadata = {
     title: 'Zist: Unleash the Power of Code Snippets with GitHub Gist',
     description:
       'Optimize your coding workflow with Zist, the revolutionary code snippets manager. Save, organize, and access your code snippets effortlessly. Zist syncs with your GitHub gists, making your snippets available directly in VS Code and your browser. Turn coding chaos into clarity with Zist.',
-    images: ['https://zistapp.xyz/og.png'],
+    images: [
+      {
+        url: 'https://zistapp.xyz/og.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
     creator: '@Srinu53168',
   },
   icons: {
