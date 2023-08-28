@@ -3,6 +3,7 @@
 import { Balancer } from 'react-wrap-balancer';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { signIn } from 'next-auth/react';
 
 import { useIsMobile } from '@/lib/hooks/useIsMobile';
 
@@ -40,6 +41,12 @@ function Hero() {
           <Button
             className="flex ml-8 lg:ml-0 items-center w-fit gap-2 rounded-xl border-2 px-8 h-10 border-gray-200 text-white"
             variant="outline"
+            onClick={() => {
+              signIn('github', {
+                callbackUrl: `${window.location.origin}/dashboard`,
+                redirect: true,
+              });
+            }}
           >
             Get Started
           </Button>

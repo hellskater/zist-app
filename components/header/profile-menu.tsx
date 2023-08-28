@@ -29,7 +29,7 @@ function ProfileMenu() {
         variant="outline"
         onClick={() => {
           signIn('github', {
-            callbackUrl: `/dashboard`,
+            callbackUrl: `${window.location.origin}/dashboard`,
             redirect: true,
           });
         }}
