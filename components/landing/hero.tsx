@@ -38,7 +38,7 @@ function Hero() {
             </Balancer>
           </p>
 
-          <div className="flex flex-col lg:flex-row items-center gap-5">
+          <div className="flex items-center gap-5">
             <Button
               className="flex ml-8 lg:ml-0 items-center w-fit gap-2 rounded-xl border-2 px-8 h-10 border-gray-200 text-white"
               variant="outline"
