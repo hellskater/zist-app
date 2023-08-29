@@ -358,7 +358,17 @@ export const usePostGist = () => {
       toast.error('Failed to create gist');
     },
 
-    onSuccess: () => {
+    onSuccess: (data: Gist) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        ((old: { pages: Gist[][] }) => {
+          return {
+            ...old,
+            pages: [[data], ...old.pages],
+          };
+        }) as Updater<{ pages: Gist[][] } | undefined, { pages: Gist[][] }>
+      );
+
       queryClient.invalidateQueries({
         queryKey: ['gists', (session?.user as CustomProfile)?.id],
       });
