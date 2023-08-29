@@ -33,9 +33,9 @@ function ProfileMenu() {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-20 -ml-20">
-          <Link href="/dashboard/settings">
+          <Link href="/dashboard">
             <DropdownMenuItem className="cursor-pointer">
-              Settings
+              Dashboard
             </DropdownMenuItem>
           </Link>
           <DropdownMenuItem
