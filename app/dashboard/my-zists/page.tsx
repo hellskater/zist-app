@@ -169,7 +169,7 @@ const MyZistsPage = () => {
             message="Looks like you dont have any gists yet. Let's create one."
             showButton
             buttonText="Create New Gist"
-            redirectURL="/create-gist"
+            redirectURL="/dashboard/create-zist"
           />
         )}
       </section>
