@@ -312,7 +312,27 @@ export const usePatchGist = () => {
         context?.previousGist
       );
     },
-
+    onSuccess: (data: Gist) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        ((old: { pages: Gist[][] }) => {
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.map((gist) => {
+                if (gist.id === data.id) {
+                  return {
+                    ...gist,
+                    ...data,
+                  } as Gist;
+                }
+                return gist;
+              })
+            ),
+          };
+        }) as Updater<{ pages: Gist[][] } | undefined, { pages: Gist[][] }>
+      );
+    },
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ['gists', (session?.user as CustomProfile)?.id],
@@ -358,7 +378,17 @@ export const usePostGist = () => {
       toast.error('Failed to create gist');
     },
 
-    onSettled: () => {
+    onSuccess: (data: Gist) => {
+      queryClient.setQueryData(
+        ['gists', (session?.user as CustomProfile)?.id],
+        ((old: { pages: Gist[][] }) => {
+          return {
+            ...old,
+            pages: [[data], ...old.pages],
+          };
+        }) as Updater<{ pages: Gist[][] } | undefined, { pages: Gist[][] }>
+      );
+
       queryClient.invalidateQueries({
         queryKey: ['gists', (session?.user as CustomProfile)?.id],
       });

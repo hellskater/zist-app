@@ -267,6 +267,10 @@ const CodeAndMarkdownWrapper = ({
             handleOnChange={(value: string | undefined) =>
               handleChangeFileContent(value)
             }
+            selectedFileName={
+              gistData.files.find((file) => file.id === selectedFileId)
+                ?.filename || ''
+            }
           />
         </TabsContentWrapper>
       </Tabs>

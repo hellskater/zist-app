@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { BsCodeSquare } from 'react-icons/bs';
 import { FiUsers } from 'react-icons/fi';
+import Link from 'next/link';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGithubProfile } from '@/lib/hooks/useGithubProfile';
@@ -48,7 +49,11 @@ export default function UserProfile({ username }: Props) {
             </div>
           ) : (
             <>
-              <h1 className="text-2xl font-bold">{user.name}</h1>
+              <Link href={`/user/${user.login}`}>
+                <h1 className="text-2xl font-bold cursor-pointer hover:text-3xl transition-all duration-300 hover:text-yellow-500">
+                  {user.name}
+                </h1>
+              </Link>
               <p className="text-sm text-gray-400">@{user.login}</p>
               <p className="mt-4 text-sm">{user.bio}</p>
               <div className="mt-4 flex items-center text-sm space-x-2">

@@ -39,20 +39,20 @@ export async function generateMetadata(
   const description = getDescription(gistData?.description || '');
 
   const ogImage =
-    `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/logo.png';
+    `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/og.png';
 
   return {
-    title: `${fileName || 'File'} | Zist`,
+    title: `${description || fileName || 'File'} | Zist`,
     description: description || previousDescription,
     openGraph: {
-      title: `${fileName || 'File'} | Zist`,
+      title: `${description || fileName || 'File'} | Zist`,
       description: description || previousDescription,
       url: `https://zistapp.xyz/gist/${gistId}`,
       images: [ogImage, ...previousImages],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${fileName || 'File'} | Zist`,
+      title: `${description || fileName || 'File'} | Zist`,
       description: description || previousDescription,
       images: [ogImage, ...previousImages],
     },

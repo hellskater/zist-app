@@ -165,7 +165,7 @@ const UserPage = ({ params }: { params: { username: string } }) => {
             message="Looks like you dont have any gists yet."
             showButton={false}
             buttonText="Create New Gist"
-            redirectURL="/create-gist"
+            redirectURL=""
           />
         )}
       </section>
