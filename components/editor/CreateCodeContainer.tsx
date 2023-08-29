@@ -3,10 +3,12 @@ import { Editor, OnChange } from '@monaco-editor/react';
 
 import { defaultFontMapper, displayFontMapper } from '@/app/styles/fonts';
 import { cn } from '@/lib/utils';
+import { extensionToLanguage } from '@/lib/constants/language';
 
 type CreateCodeContainerProps = {
   handleOnChange: OnChange;
   value: string;
+  selectedFileName?: string;
 };
 
 const options = {
@@ -24,6 +26,7 @@ const options = {
 const CreateCodeContainer = ({
   handleOnChange,
   value,
+  selectedFileName,
 }: CreateCodeContainerProps) => {
   function setEditorTheme(monaco: any) {
     monaco.editor.defineTheme('onedark', {
@@ -43,11 +46,14 @@ const CreateCodeContainer = ({
     });
   }
 
+  const languageExtension = selectedFileName?.split('.')[1] || 'js';
+  const language = extensionToLanguage[languageExtension];
+
   return (
     <div>
       <Editor
         options={options}
-        language="javascript"
+        language={language}
         value={value}
         beforeMount={setEditorTheme}
         theme="onedark"
