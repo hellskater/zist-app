@@ -10,7 +10,3 @@ Optimize your coding workflow with Zist, the revolutionary code snippets manager
 2. Install [pnpm](https://pnpm.io/)
 3. Run `pnpm install`
 4. Run `pnpm dev`
-
-## Todo
-
-- [x] Configure `.eslintrc.json` to use `@typescript-eslint` rules
