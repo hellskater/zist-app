@@ -12,12 +12,13 @@ type CreateCodeContainerProps = {
 const options = {
   minimap: { enabled: false },
   lineNumbers: 'off' as const,
-  scrollBeyondLastLine: false,
-  overviewRulerLanes: 0,
   scrollbar: {
-    vertical: 'visible' as const,
+    useShadows: false,
+    verticalHasArrows: true,
+    horizontalHasArrows: true,
     verticalScrollbarSize: 0,
-    horizontalScrollbarSize: 5,
+    horizontalScrollbarSize: 17,
+    alwaysConsumeMouseWheel: false,
   },
 };
 
@@ -56,7 +57,7 @@ const CreateCodeContainer = ({
         onChange={handleOnChange}
         className={
           (cn(displayFontMapper.Default, defaultFontMapper.Default),
-          'relative min-h-[500px] w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] rounded-lg border sm:px-12 sm:shadow-lg')
+          'relative min-h-[500px] cursor-default w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] rounded-lg border sm:px-12 sm:shadow-lg')
         }
       />
     </div>
