@@ -141,7 +141,7 @@ const MyZistsPage = () => {
         </div>
       </section>
 
-      <section className="flex items-center gap-10 2xl:gap-14 mt-10 flex-wrap">
+      <section className="flex items-center gap-10 2xl:gap-10 mt-10 flex-wrap">
         {isPending ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Skeleton
