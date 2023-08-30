@@ -122,7 +122,10 @@ const PreviewCard = ({
       description: getDescription(description),
       availableTags: allTags,
       availableCategories: categories,
-      files: filesData,
+      files: filesData.map((file) => ({
+        filename: file.filename,
+        fileContent: file.fileContent.slice(0, 2000),
+      })),
     };
 
     const response = await complete(JSON.stringify(payload));
