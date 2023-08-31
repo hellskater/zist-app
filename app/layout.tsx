@@ -2,6 +2,7 @@ import './styles/globals.css';
 import './styles/prosemirror.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 
 import ClientProviders from '@/components/providers';
 import Header from '@/components/header';
@@ -111,6 +112,7 @@ export default function RootLayout({
           <>
             <Header />
             {children}
+            <Analytics />
           </>
         </ClientProviders>
       </body>
