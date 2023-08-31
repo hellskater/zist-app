@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Balancer } from 'react-wrap-balancer';
@@ -103,6 +104,16 @@ function Hero() {
           </motion.div>
         </div>
       </div>
+      <a
+        href="https://www.producthunt.com/posts/zist?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-zist"
+        target="_blank"
+      >
+        <img
+          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=412240&theme=dark"
+          alt="Zist - Effortlessly&#0032;create&#0032;and&#0032;organize&#0032;snippets&#0032;&#0038;&#0032;GitHub&#0032;gists | Product Hunt"
+          className="w-250px h-54p fixed bottom-10 right-3"
+        />
+      </a>
     </section>
   );
 }
