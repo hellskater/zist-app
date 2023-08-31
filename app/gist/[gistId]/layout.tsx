@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import axios from 'axios';
 import { ResolvingMetadata, Metadata } from 'next';
 
@@ -105,6 +106,16 @@ export default async function GistLayout({
       </section>
 
       <main className="pt-24 flex-1 lg:w-[80%] w-full">{children}</main>
+      <a
+        href="https://www.producthunt.com/posts/zist?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-zist"
+        target="_blank"
+      >
+        <img
+          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=412240&theme=dark"
+          alt="Zist - Effortlessly&#0032;create&#0032;and&#0032;organize&#0032;snippets&#0032;&#0038;&#0032;GitHub&#0032;gists | Product Hunt"
+          className="w-250px h-54p fixed bottom-10 right-3"
+        />
+      </a>
     </div>
   );
 }
