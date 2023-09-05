@@ -7,7 +7,7 @@ const parseDescription = (description: string) => {
       config: {} as ZistConfig,
     };
   }
-  const [descriptionText, configText] = description.split('<-ZIST-CONFIG->');
+  const [descriptionText, configText] = description?.split('<-ZIST-CONFIG->');
 
   const config = JSON.parse(configText || '{}');
 

@@ -53,7 +53,7 @@ export const getAllZistsData = (
       let hasLanguage = false;
 
       Object.keys(gist.files).forEach((file: string) => {
-        const extension = file.split('.').pop();
+        const extension = file?.split('.').pop();
 
         const language = extensionToLanguage[extension as string];
 
@@ -174,7 +174,7 @@ export const getAllLanguages = (gists: Gist[] | undefined) => {
 
   gists?.forEach((gist: Gist) => {
     Object.keys(gist.files).forEach((file: string) => {
-      const extension = file.split('.').pop();
+      const extension = file?.split('.').pop();
 
       const language = extensionToLanguage[extension as string];
 

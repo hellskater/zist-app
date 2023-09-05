@@ -152,7 +152,8 @@ export const getCreatePayload = (gistData: GistData) => {
       result[file.filename || `file${index + 1}`] = {
         filename: file.filename || `file${index + 1}`,
         content: file.content,
-        language: extensionToLanguage[file.language.split('.').pop() as string],
+        language:
+          extensionToLanguage[file.language?.split('.').pop() as string],
       };
       return result;
     }, {}),
@@ -196,7 +197,8 @@ export const getUpdatePayload = (gistData: GistData) => {
       result[file.filename || `file${index + 1}`] = {
         filename: file.filename || `file${index + 1}`,
         content: file.content,
-        language: extensionToLanguage[file.language.split('.').pop() as string],
+        language:
+          extensionToLanguage[file.language?.split('.').pop() as string],
       };
       return result;
     }, {}),

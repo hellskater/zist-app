@@ -85,7 +85,7 @@ const PreviewCard = ({
 
   const descriptionText = getDescription(description);
 
-  const extension = data?.filename.split('.').pop();
+  const extension = data?.filename?.split('.').pop();
 
   const language =
     extensionToLanguage[extension as string] || data?.language?.toLowerCase();
