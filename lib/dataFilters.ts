@@ -86,8 +86,7 @@ export const getAllZistsData = (
       const files = Object.keys(gist.files).join(' ');
 
       if (
-        description
-          .toLowerCase()
+        description?.toLowerCase()
           .includes((filter?.search as string).toLowerCase()) ||
         files.toLowerCase().includes((filter?.search as string).toLowerCase())
       ) {
