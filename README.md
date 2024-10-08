@@ -6,7 +6,7 @@ Optimize your coding workflow with Zist, the revolutionary code snippets manager
 
 ## Live
 
-[https://zistapp.xyz/](https://zistapp.xyz/)
+[https://zist-app.vercel.app/](https://zist-app.vercel.app/)
 
 ## Setup
 
