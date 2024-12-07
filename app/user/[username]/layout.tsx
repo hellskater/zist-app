@@ -40,7 +40,7 @@ export async function generateMetadata(
     openGraph: {
       title: `${githubProfile?.name || githubProfile?.login || 'User'} | Zist`,
       description: githubProfile?.bio,
-      url: `https://zistapp.xyz/user/${username}`,
+      url: `https://zist-app.vercel.app/user/${username}`,
       images: [githubProfile?.avatar_url as string, ...previousImages],
     },
     twitter: {

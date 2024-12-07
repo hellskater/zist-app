@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'K Srinivas Rao',
-      url: 'https://twitter.com/Srinu53168',
+      url: 'https://twitter.com/sriniously',
     },
     {
       name: 'Millan Sharma',
@@ -51,14 +51,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://zistapp.xyz',
+    url: 'https://zist-app.vercel.app',
     title: 'Zist: Unleash the Power of Code Snippets with GitHub Gist',
     description:
       'Optimize your coding workflow with Zist, the revolutionary code snippets manager. Save, organize, and access your code snippets effortlessly. Zist syncs with your GitHub gists, making your snippets available directly in VS Code and your browser. Turn coding chaos into clarity with Zist.',
     siteName: 'Zist',
     images: [
       {
-        url: 'https://zistapp.xyz/og.png',
+        url: 'https://zist-app.vercel.app/og.png',
         width: 1200,
         height: 630,
       },
@@ -71,12 +71,12 @@ export const metadata: Metadata = {
       'Optimize your coding workflow with Zist, the revolutionary code snippets manager. Save, organize, and access your code snippets effortlessly. Zist syncs with your GitHub gists, making your snippets available directly in VS Code and your browser. Turn coding chaos into clarity with Zist.',
     images: [
       {
-        url: 'https://zistapp.xyz/og.png',
+        url: 'https://zist-app.vercel.app/og.png',
         width: 1200,
         height: 630,
       },
     ],
-    creator: '@Srinu53168',
+    creator: '@sriniously',
   },
   icons: {
     icon: 'favicon.ico',

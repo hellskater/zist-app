@@ -2,18 +2,14 @@ import { BsFileEarmarkText, BsFiletypeXml } from 'react-icons/bs';
 import { VscFiles, VscJson } from 'react-icons/vsc';
 import { SiYaml } from 'react-icons/si';
 import { FaCode } from 'react-icons/fa';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { AiFillEdit, AiOutlineTags, AiTwotoneEdit } from 'react-icons/ai';
-import { FaWandMagicSparkles } from 'react-icons/fa6';
-import { useCompletion } from 'ai/react';
-import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import Link from 'next/link';
 import { FiEye } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { useGetGistFile } from '@/lib/hooks/useGists';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,14 +17,10 @@ import { extensionToLanguage } from '@/lib/constants/language';
 import { Files } from '@/lib/types/gist';
 import { getDescription, getZistConfig } from '@/lib/hooks/utils';
 import { truncateString } from '@/lib/utils';
-import useGetAllFilesOfGist from '@/lib/hooks/useGetAllFilesOfGist';
-import { useCategoryAndTags } from '@/lib/hooks/useCategoryAndTags';
-import { useGetDbUser } from '@/lib/hooks/useDbuser';
 
 import CodePreview from './code-preview';
 import CategoryCommand from './category/category-command';
 import TagsDialog from './tags/tags-dialog';
-import { ContactForm } from './contact-form';
 
 type PreviewCardProps = {
   files: Files;
@@ -55,31 +47,7 @@ const PreviewCard = ({
 
   const router = useRouter();
 
-  const { getFilesData } = useGetAllFilesOfGist();
-
-  const queryClient = useQueryClient();
-
-  const { updateCategoryAndTags } = useCategoryAndTags();
-
-  const { complete, isLoading: isAutoTagging } = useCompletion({
-    api: '/api/categorise',
-    onResponse: async () => {
-      queryClient.invalidateQueries({ queryKey: ['dbUser'] });
-    },
-    onError: (e) => {
-      toast.error(e.message);
-    },
-  });
-
   const [isTagsDialogOpen, setIsTagsDialogOpen] = useState(false);
-
-  const { data: dbUser } = useGetDbUser();
-
-  const remainingCredits = dbUser?.maxallowed
-    ? dbUser?.maxallowed - dbUser?.autotagcount
-    : 5;
-
-  const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
 
   const { category, tags = [] } = getZistConfig(description);
 
@@ -109,44 +77,6 @@ const PreviewCard = ({
       return <FaCode className="text-3xl text-white" />;
     }
   };
-
-  const handleAutoTag = useCallback(async () => {
-    if (remainingCredits === 0) {
-      setIsContactDialogOpen(true);
-      return;
-    }
-
-    const filesData = await getFilesData(files);
-
-    const payload = {
-      description: getDescription(description),
-      availableTags: allTags,
-      availableCategories: categories,
-      files: filesData.map((file) => ({
-        filename: file.filename,
-        fileContent: file.fileContent.slice(0, 2000),
-      })),
-    };
-
-    const response = await complete(JSON.stringify(payload));
-
-    if (!response) {
-      return;
-    }
-
-    try {
-      const parsedResponse = JSON.parse(response);
-
-      const { category, tags } = parsedResponse;
-
-      await updateCategoryAndTags({ gistId, category, tags, description });
-
-      toast.success('Auto tag successful!');
-    } catch {
-      toast.error('Failed to auto tag!');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [complete]);
 
   return (
     <div
@@ -251,23 +181,6 @@ const PreviewCard = ({
           </p> */}
           <p className="text-sm ml-2">Updated {dayjs(updated_at).fromNow()}</p>
         </div>
-        {!isPublic && (
-          <div
-            onClick={handleAutoTag}
-            className="flex items-center text-sm gap-2 hover:bg-zinc-800 text-gray-300 hover:text-yellow-500 cursor-pointer py-1 px-3 transition-all duration-300 rounded-md"
-          >
-            <FaWandMagicSparkles
-              className={`text-xl transition-all duration-100 ${
-                isAutoTagging ? 'animate-spin' : ''
-              }`}
-            />
-            <p>Auto Tag</p>
-            <ContactForm
-              isOpen={isContactDialogOpen}
-              setIsOpen={setIsContactDialogOpen}
-            />
-          </div>
-        )}
       </section>
       {descriptionText && (
         <section className="px-5 mt-3 text-sm text-gray-400">

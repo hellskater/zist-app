@@ -13,8 +13,6 @@ import {
 
 import { Button } from '../ui/button';
 
-import AutotagCount from './remaining-credits';
-
 function ProfileMenu() {
   const { data: session } = useSession();
 
@@ -41,7 +39,6 @@ function ProfileMenu() {
   else
     return (
       <div className="flex items-center gap-5">
-        <AutotagCount />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Image

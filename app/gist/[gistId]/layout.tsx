@@ -40,7 +40,8 @@ export async function generateMetadata(
   const description = getDescription(gistData?.description || '');
 
   const ogImage =
-    `https://zistapp.xyz/og?gistId=${gistId}` || 'https://zistapp.xyz/og.png';
+    `https://zist-app.vercel.app/og?gistId=${gistId}` ||
+    'https://zist-app.vercel.app/og.png';
 
   return {
     title: `${description || fileName || 'File'} | Zist`,
@@ -48,7 +49,7 @@ export async function generateMetadata(
     openGraph: {
       title: `${description || fileName || 'File'} | Zist`,
       description: description || previousDescription,
-      url: `https://zistapp.xyz/gist/${gistId}`,
+      url: `https://zist-app.vercel.app/gist/${gistId}`,
       images: [ogImage, ...previousImages],
     },
     twitter: {

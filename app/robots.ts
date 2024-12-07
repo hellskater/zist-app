@@ -5,7 +5,7 @@ export default function robots() {
         userAgent: '*',
       },
     ],
-    sitemap: 'https://zistapp.xyz/sitemap.xml',
-    host: 'https://zistapp.xyz',
+    sitemap: 'https://zist-app.vercel.app/sitemap.xml',
+    host: 'https://zist-app.vercel.app',
   };
 }
